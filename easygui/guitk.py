@@ -1,11 +1,11 @@
+from easygui.boxes import global_state
+
 try:
     import tkinter as tk  # python 3
     import tkinter.font as tk_Font
 except (SystemError, ValueError, ImportError):
     import Tkinter as tk  # python 2
     import tkFont as tk_Font
-
-from boxes import global_state
 
 
 class GUItk(object):
