@@ -7,6 +7,11 @@ except (SystemError, ValueError, ImportError):
     import Tkinter as tk  # python 2
     import tkFont as tk_Font
 
+try:
+    from .boxes import global_state
+except ImportError:
+    import easygui.boxes.global_state
+
 
 class GUItk(object):
 
