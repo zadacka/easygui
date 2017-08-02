@@ -6,10 +6,10 @@
 
 """
 
-from fillable_box import __fillablebox
-from button_box import buttonbox
-import text_box as tb
-import utils as ut
+from .fillable_box import __fillablebox
+from .button_box import buttonbox
+from . import text_box as tb
+from . import utils as ut
 
 # -------------------------------------------------------------------
 # various boxes built on top of the basic buttonbox
