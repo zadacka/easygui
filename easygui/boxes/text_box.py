@@ -80,3 +80,4 @@ class TextBox(object):
     def msg(self):
         self._msg = ""
         self.ui.set_msg(self._msg)
+
