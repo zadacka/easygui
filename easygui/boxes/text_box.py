@@ -2,8 +2,6 @@ import sys
 
 from easygui.guitk import GUItk
 
-from . import global_state
-
 try:
     import tkinter as tk  # python 3
     import tkinter.font as tk_Font
