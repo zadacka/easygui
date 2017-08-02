@@ -2,10 +2,7 @@ import sys
 
 from easygui.guitk import GUItk
 
-try:
-    from . import global_state
-except (SystemError, ValueError, ImportError):
-    import global_state
+from . import global_state
 
 try:
     import tkinter as tk  # python 3
