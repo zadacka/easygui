@@ -58,6 +58,8 @@ class GUItk(object):
 
         self.create_text_area(wrap_text)
 
+        self.set_text(text)
+
         self.create_buttons_frame()
 
         self.create_cancel_button()
