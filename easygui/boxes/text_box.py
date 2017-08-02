@@ -1,13 +1,5 @@
-import sys
-
+from easygui.boxes import to_string
 from easygui.guitk import GUItk
-
-try:
-    import tkinter as tk  # python 3
-    import tkinter.font as tk_Font
-except ImportError:
-    import Tkinter as tk  # python 2
-    import tkFont as tk_Font
 
 
 def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
@@ -88,21 +80,3 @@ class TextBox(object):
     def msg(self):
         self._msg = ""
         self.ui.set_msg(self._msg)
-
-
-def to_string(something):
-    try:
-        basestring  # python 2
-    except NameError:
-        basestring = str  # Python 3
-
-    if isinstance(something, basestring):
-        return something
-    try:
-        text = "".join(something)  # convert a list or a tuple to a string
-    except:
-        textbox(
-            "Exception when trying to convert {} to text in self.textArea"
-            .format(type(something)))
-        sys.exit(16)
-    return text

@@ -8,6 +8,7 @@ except (SystemError, ValueError, ImportError):
 
 from .boxes import global_state
 
+
 class GUItk(object):
 
     """ This is the object that contains the tk root object"""
