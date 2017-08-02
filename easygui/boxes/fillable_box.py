@@ -1,11 +1,6 @@
-try:
-    from . import utils as ut
-    from . import global_state
-    from .base_boxes import bindArrows
-except (SystemError, ValueError, ImportError):
-    import utils as ut
-    import global_state
-    from base_boxes import bindArrows
+from easygui.boxes import utils as ut
+from easygui.boxes import global_state
+from easygui.boxes.base_boxes import bindArrows
 
 try:
     import tkinter as tk  # python 3

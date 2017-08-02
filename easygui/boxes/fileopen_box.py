@@ -9,12 +9,8 @@ Version |release|
 """
 
 import os
-try:
-    from . import utils as ut
-    from . import fileboxsetup as fbs
-except (SystemError, ValueError, ImportError):
-    import utils as ut
-    import fileboxsetup as fbs
+from easygui.boxes import utils as ut
+from easygui.boxes import fileboxsetup as fbs
 
 tk = ut.tk
 

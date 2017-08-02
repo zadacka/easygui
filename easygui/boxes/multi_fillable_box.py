@@ -7,10 +7,7 @@
 Version |release|
 """
 
-try:
-    from . import global_state
-except:
-    import global_state
+from easygui.boxes import global_state
 
 try:
     import tkinter as tk  # python 3

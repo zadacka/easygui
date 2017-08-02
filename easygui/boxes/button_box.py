@@ -10,14 +10,8 @@ Version |release|
 import os
 import re
 
-try:
-    from . import global_state
-    from . import utils as ut
-    from .text_box import textbox
-except (SystemError, ValueError, ImportError):
-    import global_state
-    import utils as ut
-    from text_box import textbox
+from easygui.boxes import global_state
+from easygui.boxes import utils as ut
 
 try:
     import tkinter as tk  # python 3

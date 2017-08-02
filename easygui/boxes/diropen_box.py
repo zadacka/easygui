@@ -9,11 +9,7 @@ Version |release|
 
 
 import os
-try:
-    from . import utils as ut
-except (SystemError, ValueError, ImportError):
-    import utils as ut
-
+from easygui.boxes import utils as ut
 try:
     import tkinter as tk  # python 3
     import tkinter.font as tk_Font

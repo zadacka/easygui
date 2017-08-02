@@ -5,10 +5,7 @@
 .. highlight:: python
 
 """
-try:
-    from .derived_boxes import codebox
-except (SystemError, ValueError, ImportError):
-    from derived_boxes import codebox
+from .derived_boxes import codebox
 
 eg_version = '0.98.0-RELEASED'
 egversion = eg_version
