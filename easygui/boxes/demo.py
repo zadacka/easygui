@@ -33,9 +33,6 @@ try:
     from .choice_box import choicebox
     from .choice_box import multchoicebox
 
-    from . import about
-    from .about import eg_version
-    from .about import abouteasygui
 except (SystemError, ValueError, ImportError):
     print("Please run demo.py from outside the package")
     exit()
@@ -82,8 +79,6 @@ class Demos(object):
             ("fileopenbox", demo_fileopenbox),
             ("diropenbox", demo_diropenbox),
             ("exceptionbox", demo_exceptionbox),
-            ("About EasyGui", demo_about),
-            ("Help", demo_help),
         ]
 
     def list_descriptions(self):
@@ -115,10 +110,9 @@ def easygui_demo():
     msg = []
     msg.append("Pick the kind of box that you wish to demo.")
     msg.append(" * Python version {}".format(sys.version))
-    msg.append(" * EasyGui version {}".format(eg_version))
     msg.append(" * Tk version {}".format(ut.TkVersion))
     intro_message = "\n".join(msg)
-    title = "EasyGui " + eg_version
+    title = "EasyGui"
     # Table that relates keys in choicebox with functions to execute
     descriptions = demos.list_descriptions()
     preselected = 0
@@ -272,12 +266,6 @@ def demo_integerbox():
     return reply
 
 
-def demo_about():
-    reply = abouteasygui()
-    print("Reply was: {!r}".format(reply))
-    return reply
-
-
 def demo_enterbox():
     image = os.path.join(package_dir, "python_and_check_logo.gif")
     message = ("Enter the name of your best friend."
@@ -376,11 +364,6 @@ def demo_passwordbox():
                         "Member Logon", "alfie")
     print("Reply was: {!s}".format(reply))
     return reply
-
-
-def demo_help():
-    codebox("EasyGui Help", text=about.EASYGUI_ABOUT_INFORMATION)
-    return None
 
 
 def demo_filesavebox():
