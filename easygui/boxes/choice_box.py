@@ -1,7 +1,7 @@
 import collections
 import string
 
-
+import easygui.boxes
 from easygui.boxes import global_state, bindArrows
 
 try:
@@ -177,7 +177,7 @@ class GUItk(object):
 
         self.choices = choices
 
-        self.width_in_chars = global_state.prop_font_line_length
+        self.width_in_chars = easygui.boxes.prop_font_line_length
         # Initialize self.selected_choices
         # This is the value that will be returned if the user clicks the close
         # icon
@@ -191,7 +191,7 @@ class GUItk(object):
 
         self.config_root(title)
 
-        self.set_pos(global_state.window_position)  # GLOBAL POSITION
+        self.set_pos(easygui.boxes.window_position)  # GLOBAL POSITION
 
         self.create_msg_widget(msg)
 
@@ -254,7 +254,7 @@ class GUItk(object):
 
     def set_pos(self, pos=None):
         if not pos:
-            pos = global_state.window_position
+            pos = easygui.boxes.window_position
         self.boxRoot.geometry(pos)
 
     def get_pos(self):
@@ -263,7 +263,7 @@ class GUItk(object):
         # the window. The last two parameters are x and y screen coordinates.
         # geometry("250x150+300+300")
         geom = self.boxRoot.geometry()  # "628x672+300+200"
-        global_state.window_position = '+' + geom.split('+', 1)[1]
+        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
 
     def preselect_choice(self, preselect):
         print(preselect)
@@ -323,9 +323,9 @@ class GUItk(object):
             state=tk.DISABLED,
             background=self.boxRoot.config()["background"][-1],
             relief='flat',
-            padx=(global_state.default_hpad_in_chars *
+            padx=(easygui.boxes.default_hpad_in_chars *
                   self.calc_character_width()),
-            pady=(global_state.default_hpad_in_chars *
+            pady=(easygui.boxes.default_hpad_in_chars *
                   self.calc_character_width()),
             wrap=tk.WORD,
 

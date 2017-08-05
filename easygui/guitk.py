@@ -1,3 +1,4 @@
+import easygui.boxes
 
 try:
     import tkinter as tk  # python 3
@@ -45,10 +46,10 @@ class GUItk(object):
         wrap_text = not codebox
         if wrap_text:
             self.boxFont = tk_Font.nametofont("TkTextFont")
-            self.width_in_chars = global_state.prop_font_line_length
+            self.width_in_chars = easygui.boxes.prop_font_line_length
         else:
             self.boxFont = tk_Font.nametofont("TkFixedFont")
-            self.width_in_chars = global_state.fixw_font_line_length
+            self.width_in_chars = easygui.boxes.fixw_font_line_length
 
         # default_font.configure(size=global_state.PROPORTIONAL_FONT_SIZE)
 
@@ -112,7 +113,7 @@ class GUItk(object):
         # the window. The last two parameters are x and y screen coordinates.
         # geometry("250x150+300+300")
         geom = self.boxRoot.geometry()  # "628x672+300+200"
-        global_state.window_position = '+' + geom.split('+', 1)[1]
+        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
 
     def get_text(self):
         return self.textArea.get(0.0, 'end-1c')
@@ -139,7 +140,7 @@ class GUItk(object):
 
         self.boxRoot.title(title)
 
-        self.set_pos(global_state.window_position)
+        self.set_pos(easygui.boxes.window_position)
 
         # Quit when x button pressed
         self.boxRoot.protocol('WM_DELETE_WINDOW', self.x_pressed)
@@ -161,10 +162,10 @@ class GUItk(object):
             self.msgFrame,
             width=self.width_in_chars,
             state=tk.DISABLED,
-            padx=(global_state.default_hpad_in_chars) *
-            self.calc_character_width(),
-            pady=global_state.default_hpad_in_chars *
-            self.calc_character_width(),
+            padx=(easygui.boxes.default_hpad_in_chars) *
+                 self.calc_character_width(),
+            pady=easygui.boxes.default_hpad_in_chars *
+                 self.calc_character_width(),
             wrap=tk.WORD,
 
         )
@@ -190,10 +191,10 @@ class GUItk(object):
 
         self.textArea = tk.Text(
             self.textFrame,
-            padx=global_state.default_hpad_in_chars *
-            self.calc_character_width(),
-            pady=global_state.default_hpad_in_chars *
-            self.calc_character_width(),
+            padx=easygui.boxes.default_hpad_in_chars *
+                 self.calc_character_width(),
+            pady=easygui.boxes.default_hpad_in_chars *
+                 self.calc_character_width(),
             height=25,  # lines
             width=self.width_in_chars,   # chars of the current font
         )

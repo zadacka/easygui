@@ -6,7 +6,7 @@
 
 Version |release|
 """
-
+import easygui.boxes
 from easygui.boxes import global_state
 
 try:
@@ -266,7 +266,7 @@ class GUItk(object):
 
         self.create_root(title)
 
-        self.set_pos(global_state.window_position)  # GLOBAL POSITION
+        self.set_pos(easygui.boxes.window_position)  # GLOBAL POSITION
 
         self.create_msg_widget(msg)
 
@@ -312,7 +312,7 @@ class GUItk(object):
         # the window. The last two parameters are x and y screen coordinates.
         # geometry("250x150+300+300")
         geom = self.boxRoot.geometry()  # "628x672+300+200"
-        global_state.window_position = '+' + geom.split('+', 1)[1]
+        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
 
     def get_values(self):
         values = []
@@ -334,7 +334,7 @@ class GUItk(object):
         # -------------------- the msg widget ----------------------------
         self.messageWidget = tk.Message(self.boxRoot, width="4.5i", text=msg)
         self.messageWidget.configure(
-            font=(global_state.PROPORTIONAL_FONT_FAMILY, global_state.PROPORTIONAL_FONT_SIZE))
+            font=(easygui.boxes.PROPORTIONAL_FONT_FAMILY, easygui.boxes.PROPORTIONAL_FONT_SIZE))
         self.messageWidget.pack(
             side=tk.TOP, expand=1, fill=tk.BOTH, padx='3m', pady='3m')
 
@@ -357,7 +357,7 @@ class GUItk(object):
             entryWidget = tk.Entry(entryFrame, width=40, highlightthickness=2)
             self.entryWidgets.append(entryWidget)
             entryWidget.configure(
-                font=(global_state.PROPORTIONAL_FONT_FAMILY, global_state.TEXT_ENTRY_FONT_SIZE))
+                font=(easygui.boxes.PROPORTIONAL_FONT_FAMILY, easygui.boxes.TEXT_ENTRY_FONT_SIZE))
             entryWidget.pack(side=tk.RIGHT, padx="3m")
 
             self.bindArrows(entryWidget)
@@ -395,7 +395,7 @@ class GUItk(object):
         # handler
         commandButton = okButton
         handler = self.ok_pressed
-        for selectionEvent in global_state.STANDARD_SELECTION_EVENTS:
+        for selectionEvent in easygui.boxes.STANDARD_SELECTION_EVENTS:
             commandButton.bind("<%s>" % selectionEvent, handler)
 
     def create_cancel_button(self):
@@ -409,7 +409,7 @@ class GUItk(object):
         # handler
         commandButton = cancelButton
         handler = self.cancel_pressed
-        for selectionEvent in global_state.STANDARD_SELECTION_EVENTS:
+        for selectionEvent in easygui.boxes.STANDARD_SELECTION_EVENTS:
             commandButton.bind("<%s>" % selectionEvent, handler)
 
     def bindArrows(self, widget):

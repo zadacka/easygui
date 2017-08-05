@@ -1,3 +1,4 @@
+import easygui.boxes
 from easygui.boxes import utils as ut, bindArrows
 from easygui.boxes import global_state
 
@@ -48,7 +49,7 @@ def __fillablebox(msg, title="", default="", mask=None, image=None, root=None):
     boxRoot.protocol('WM_DELETE_WINDOW', __enterboxQuit)
     boxRoot.title(title)
     boxRoot.iconname('Dialog')
-    boxRoot.geometry(global_state.window_position)
+    boxRoot.geometry(easygui.boxes.window_position)
     boxRoot.bind("<Escape>", __enterboxCancel)
 
     # ------------- define the messageFrame ---------------------------------
@@ -83,7 +84,7 @@ def __fillablebox(msg, title="", default="", mask=None, image=None, root=None):
     # -------------------- the msg widget ----------------------------
     messageWidget = tk.Message(messageFrame, width="4.5i", text=msg)
     messageWidget.configure(
-        font=(global_state.PROPORTIONAL_FONT_FAMILY, global_state.PROPORTIONAL_FONT_SIZE))
+        font=(easygui.boxes.PROPORTIONAL_FONT_FAMILY, easygui.boxes.PROPORTIONAL_FONT_SIZE))
     messageWidget.pack(
         side=tk.RIGHT, expand=1, fill=tk.BOTH, padx='3m', pady='3m')
 
@@ -91,7 +92,7 @@ def __fillablebox(msg, title="", default="", mask=None, image=None, root=None):
     entryWidget = tk.Entry(entryFrame, width=40)
     bindArrows(entryWidget)
     entryWidget.configure(
-        font=(global_state.PROPORTIONAL_FONT_FAMILY, global_state.TEXT_ENTRY_FONT_SIZE))
+        font=(easygui.boxes.PROPORTIONAL_FONT_FAMILY, easygui.boxes.TEXT_ENTRY_FONT_SIZE))
     if mask:
         entryWidget.configure(show=mask)
     entryWidget.pack(side=tk.LEFT, padx="3m")
@@ -110,7 +111,7 @@ def __fillablebox(msg, title="", default="", mask=None, image=None, root=None):
     # handler
     commandButton = okButton
     handler = __enterboxGetText
-    for selectionEvent in global_state.STANDARD_SELECTION_EVENTS:
+    for selectionEvent in easygui.boxes.STANDARD_SELECTION_EVENTS:
         commandButton.bind("<{}>".format(selectionEvent), handler)
 
     # ------------------ cancel button -------------------------------
@@ -123,7 +124,7 @@ def __fillablebox(msg, title="", default="", mask=None, image=None, root=None):
     # handler
     commandButton = cancelButton
     handler = __enterboxCancel
-    for selectionEvent in global_state.STANDARD_SELECTION_EVENTS:
+    for selectionEvent in easygui.boxes.STANDARD_SELECTION_EVENTS:
         commandButton.bind("<{}>".format(selectionEvent), handler)
 
     # ------------------- time for action! -----------------
