@@ -10,28 +10,28 @@ import os
 import sys
 
 try:
-    from . import utils as ut
-    from .button_box import buttonbox
-    from .text_box import textbox
-    from .diropen_box import diropenbox
-    from .fileopen_box import fileopenbox
-    from .filesave_box import filesavebox
-    from .multi_fillable_box import multenterbox
-    from .multi_fillable_box import multpasswordbox
+    from easygui.boxes import utils as ut
+    from easygui.boxes.button_box import buttonbox
+    from easygui.boxes.text_box import textbox
+    from easygui.boxes.diropen_box import diropenbox
+    from easygui.boxes.fileopen_box import fileopenbox
+    from easygui.boxes.filesave_box import filesavebox
+    from easygui.boxes.multi_fillable_box import multenterbox
+    from easygui.boxes.multi_fillable_box import multpasswordbox
 
-    from .derived_boxes import ynbox
-    from .derived_boxes import ccbox
-    from .derived_boxes import boolbox
-    from .derived_boxes import indexbox
-    from .derived_boxes import msgbox
-    from .derived_boxes import integerbox
-    from .derived_boxes import enterbox
-    from .derived_boxes import exceptionbox
-    from .derived_boxes import codebox
-    from .derived_boxes import passwordbox
+    from easygui.boxes.derived_boxes import ynbox
+    from easygui.boxes.derived_boxes import ccbox
+    from easygui.boxes.derived_boxes import boolbox
+    from easygui.boxes.derived_boxes import indexbox
+    from easygui.boxes.derived_boxes import msgbox
+    from easygui.boxes.derived_boxes import integerbox
+    from easygui.boxes.derived_boxes import enterbox
+    from easygui.boxes.derived_boxes import exceptionbox
+    from easygui.boxes.derived_boxes import codebox
+    from easygui.boxes.derived_boxes import passwordbox
 
-    from .choice_box import choicebox
-    from .choice_box import multchoicebox
+    from easygui.boxes.choice_box import choicebox
+    from easygui.boxes.choice_box import multchoicebox
 
 except (SystemError, ValueError, ImportError):
     print("Please run demo.py from outside the package")

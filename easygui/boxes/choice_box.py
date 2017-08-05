@@ -2,8 +2,7 @@ import collections
 import string
 
 
-from easygui.boxes import global_state
-from easygui.boxes.base_boxes import bindArrows
+from easygui.boxes import global_state, bindArrows
 
 try:
     import tkinter as tk  # python 3
