@@ -1,5 +1,9 @@
-import Tkinter as tk
-import tkFont as tk_Font
+try:
+    import tkinter as tk  # python 3
+    import tkinter.font as tk_Font
+except (SystemError, ValueError, ImportError):
+    import Tkinter as tk  # python 2
+    import tkFont as tk_Font
 
 import easygui.boxes
 from easygui.boxes import to_string
