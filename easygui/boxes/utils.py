@@ -14,8 +14,8 @@ import traceback
 
 # A set of variables and functions to centralize differences between
 # python 2 and 3
-runningPython27 = False
-runningPython34 = False
+from easygui.boxes import runningPython27, runningPython34
+
 if 0x020700F0 <= sys.hexversion <= 0x030000F0:
     runningPython27 = True
 if 0x030400F0 <= sys.hexversion <= 0x040000F0:
@@ -58,7 +58,7 @@ except:
 # Python 2.  If 2 ever goes away, this logic can go away and uses of
 # utils.basestring should be changed to just str
 if runningPython27:
-    basestring = basestring
+    pass
 if runningPython34:
     basestring = str
 

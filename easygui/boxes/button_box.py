@@ -11,7 +11,6 @@ import os
 import re
 
 import easygui.boxes
-from easygui.boxes import global_state
 from easygui.boxes import utils as ut
 
 try:

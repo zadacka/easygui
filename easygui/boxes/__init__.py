@@ -37,3 +37,6 @@ prop_font_line_length = 62
 fixw_font_line_length = 80
 num_lines_displayed = 50
 default_hpad_in_chars = 2
+runningPython27 = False
+runningPython34 = False
+basestring = basestring

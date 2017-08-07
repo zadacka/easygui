@@ -7,7 +7,6 @@
 Version |release|
 """
 import easygui.boxes
-from easygui.boxes import global_state
 
 try:
     import tkinter as tk  # python 3

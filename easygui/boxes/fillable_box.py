@@ -1,6 +1,5 @@
 import easygui.boxes
 from easygui.boxes import utils as ut, bindArrows
-from easygui.boxes import global_state
 
 try:
     import tkinter as tk  # python 3

@@ -5,7 +5,7 @@
 .. highlight:: python
 
 """
-
+import easygui.boxes
 from easygui.boxes.fillable_box import __fillablebox
 from easygui.boxes.button_box import buttonbox
 from easygui.boxes import text_box as tb
@@ -206,7 +206,7 @@ def msgbox(msg="(Your message goes here)", title=" ",
     :param tk_widget root: Top-level Tk widget
     :return: the text of the ok_button
     """
-    if not isinstance(ok_button, ut.basestring):
+    if not isinstance(ok_button, easygui.boxes.basestring):
         raise AssertionError(
             "The 'ok_button' argument to msgbox must be a string.")
 

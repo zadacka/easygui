@@ -8,6 +8,8 @@ Version |release|
 
 """
 import os
+
+import easygui.boxes
 from easygui.boxes import utils as ut
 
 try:
@@ -73,7 +75,7 @@ def fileboxSetup(default, filetypes):
     if initialFileTypeObject in (filetypeObjects[0], filetypeObjects[-1]):
         pass
     else:
-        if ut.runningPython27:
+        if easygui.boxes.runningPython27:
             filetypeObjects.append(initialFileTypeObject)
         else:
             filetypeObjects.insert(0, initialFileTypeObject)
@@ -107,7 +109,7 @@ class FileTypeObject:
 
         self.masks = list()
 
-        if isinstance(filemask, ut.basestring):  # a str or unicode
+        if isinstance(filemask, easygui.boxes.basestring):  # a str or unicode
             self.initializeFromString(filemask)
 
         elif isinstance(filemask, list):
