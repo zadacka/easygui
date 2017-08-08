@@ -265,7 +265,7 @@ class GUItk(object):
 
         self.create_root(title)
 
-        self.set_pos(easygui.boxes.window_position)  # GLOBAL POSITION
+        self.set_pos(easygui.boxes.GLOBAL_WINDOW_POSITION)  # GLOBAL POSITION
 
         self.create_msg_widget(msg)
 
@@ -311,7 +311,7 @@ class GUItk(object):
         # the window. The last two parameters are x and y screen coordinates.
         # geometry("250x150+300+300")
         geom = self.boxRoot.geometry()  # "628x672+300+200"
-        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
+        easygui.boxes.GLOBAL_WINDOW_POSITION = '+' + geom.split('+', 1)[1]
 
     def get_values(self):
         values = []

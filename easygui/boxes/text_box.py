@@ -5,8 +5,8 @@ except (SystemError, ValueError, ImportError):
     import Tkinter as tk  # python 2
     import tkFont as tk_Font
 
-import easygui.boxes
-from easygui.boxes import to_string
+from easygui.boxes import DEFAULT_PADDING, to_string, fixw_font_line_length, prop_font_line_length, \
+    GLOBAL_WINDOW_POSITION
 
 
 def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
@@ -93,50 +93,37 @@ class GUItk(object):
     def __init__(self, msg, title, text, code_box, callback):
         self.callback = callback
 
+        # Root box
         self.boxRoot = tk.Tk()
-
-        if code_box:
-            self.boxFont = tk_Font.nametofont("TkFixedFont")
-            self.width_in_chars = easygui.boxes.fixw_font_line_length
-        else:
-            self.boxFont = tk_Font.nametofont("TkTextFont")
-            self.width_in_chars = easygui.boxes.prop_font_line_length
-
-        # configure root
         self.boxRoot.title(title)
         self.boxRoot.iconname('Dialog')
-        self.boxRoot.geometry(easygui.boxes.window_position)
+        self.boxRoot.geometry(GLOBAL_WINDOW_POSITION)
 
-        # Quit when x button pressed
-        self.boxRoot.protocol('WM_DELETE_WINDOW', self.x_pressed)
-        self.boxRoot.bind("<Escape>", self.cancel_pressed)
+        self.boxRoot.protocol('WM_DELETE_WINDOW', self.x_pressed)  # Quit when x button pressed
+        self.boxRoot.bind("<Escape>", self.cancel_button_pressed)
 
-        self.msgFrame = tk.Frame(self.boxRoot, padx=2 * self.boxFont.measure('W'),)
-        self.msgFrame.pack(side=tk.TOP, expand=1, fill='both')
+        if code_box:
+            padding = DEFAULT_PADDING * tk_Font.nametofont("TkFixedFont").measure('W')
+            width_in_chars = fixw_font_line_length
+        else:
+            padding = DEFAULT_PADDING * tk_Font.nametofont("TkTextFont").measure('W')
+            width_in_chars = prop_font_line_length
 
-        self.messageArea = tk.Text(
-            self.msgFrame,
-            width=self.width_in_chars,
-            state=tk.DISABLED,
-            padx=easygui.boxes.default_hpad_in_chars * self.boxFont.measure('W'),
-            pady=easygui.boxes.default_hpad_in_chars * self.boxFont.measure('W'),
-            wrap=tk.WORD,)
+        # Message frame
+        message_frame = tk.Frame(self.boxRoot, padx=padding, )
+        message_frame.pack(side=tk.TOP, expand=1, fill='both')
+
+        self.messageArea = tk.Text(message_frame, width=width_in_chars, state=tk.DISABLED, padx=padding, pady=padding, wrap=tk.WORD, )
         self.set_msg_area("" if msg is None else msg)
         self.messageArea.pack(side=tk.TOP, expand=1, fill='both')
 
-        self.textFrame = tk.Frame(self.boxRoot, padx=2 * self.boxFont.measure('W'),)
-        self.textFrame.pack(side=tk.TOP)
+        # Text frame
+        text_frame = tk.Frame(self.boxRoot, padx=padding, )
+        text_frame.pack(side=tk.TOP)
 
-        self.textArea = tk.Text(self.textFrame,
-                                padx=easygui.boxes.default_hpad_in_chars * self.boxFont.measure('W'),
-                                pady=easygui.boxes.default_hpad_in_chars * self.boxFont.measure('W'),
-                                height=25,  # lines
-                                width=self.width_in_chars,  # chars of the current font
-                                )
-
+        self.textArea = tk.Text(text_frame, padx=padding, pady=padding, height=25, width=width_in_chars)
         self.textArea.configure(wrap=tk.NONE if code_box else tk.WORD)
 
-        # some simple keybindings for scrolling
         self.boxRoot.bind("<Next>", self.textArea.yview_scroll(1, tk.PAGES))
         self.boxRoot.bind("<Prior>", self.textArea.yview_scroll(-1, tk.PAGES))
 
@@ -146,10 +133,10 @@ class GUItk(object):
         self.boxRoot.bind("<Down>", self.textArea.yview_scroll(1, tk.UNITS))
         self.boxRoot.bind("<Up>", self.textArea.yview_scroll(-1, tk.UNITS))
 
-        vertical_scrollbar = tk.Scrollbar(self.textFrame, orient=tk.VERTICAL, command=self.textArea.yview)
+        vertical_scrollbar = tk.Scrollbar(text_frame, orient=tk.VERTICAL, command=self.textArea.yview)
         self.textArea.configure(yscrollcommand=vertical_scrollbar.set)
 
-        horizontal_scrollbar = tk.Scrollbar(self.textFrame, orient=tk.HORIZONTAL, command=self.textArea.xview)
+        horizontal_scrollbar = tk.Scrollbar(text_frame, orient=tk.HORIZONTAL, command=self.textArea.xview)
         self.textArea.configure(xscrollcommand=horizontal_scrollbar.set)
 
         if code_box:
@@ -159,36 +146,28 @@ class GUItk(object):
 
         # pack textArea last so bottom scrollbar displays properly
         self.textArea.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
-        
         self.set_text(text)
-        self.buttonsFrame = tk.Frame(self.boxRoot)
-        self.buttonsFrame.pack(side=tk.TOP)
-        
-        # put the buttons in the buttonsFrame
-        self.cancelButton = tk.Button(self.buttonsFrame, takefocus=tk.YES, text="Cancel", height=1, width=6)
-        self.cancelButton.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m', ipady="1m", ipadx="2m")
 
-        # for the commandButton, bind activation events to the activation event handler
-        self.cancelButton.bind("<Return>", self.cancel_pressed)
-        self.cancelButton.bind("<Button-1>", self.cancel_pressed)
-        self.cancelButton.bind("<Escape>", self.cancel_pressed)
+        # Button frame
+        buttons_frame = tk.Frame(self.boxRoot)
+        buttons_frame.pack(side=tk.TOP)
 
-        self.okButton = tk.Button(
-            self.buttonsFrame, takefocus=tk.YES, text="OK", height=1, width=6)
-        self.okButton.pack(
-            expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m', ipady="1m",
-            ipadx="2m")
+        cancel_button = tk.Button(buttons_frame, takefocus=tk.YES, text="Cancel", height=1, width=6)
+        cancel_button.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m', ipady="1m", ipadx="2m")
+        cancel_button.bind("<Return>", self.cancel_button_pressed)
+        cancel_button.bind("<Button-1>", self.cancel_button_pressed)
+        cancel_button.bind("<Escape>", self.cancel_button_pressed)
 
-        # for the commandButton, bind activation events to the activation event handler
-        self.okButton.bind("<Return>", self.ok_button_pressed)
-        self.okButton.bind("<Button-1>", self.ok_button_pressed)
+        ok_button = tk.Button(buttons_frame, takefocus=tk.YES, text="OK", height=1, width=6)
+        ok_button.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m', ipady="1m", ipadx="2m")
+        ok_button.bind("<Return>", self.ok_button_pressed)
+        ok_button.bind("<Button-1>", self.ok_button_pressed)
 
     def run(self):
         self.boxRoot.mainloop()
         self.boxRoot.destroy()
 
     def stop(self):
-        self.get_pos()
         self.boxRoot.quit()
 
     def set_msg_area(self, msg):
@@ -198,8 +177,8 @@ class GUItk(object):
         self.messageArea.config(state=tk.DISABLED)
         # Adjust msg height
         self.messageArea.update()
-        numlines = self.get_num_lines(self.messageArea)
-        self.messageArea.configure(height=numlines)
+        num_lines = self.get_num_lines(self.messageArea)
+        self.messageArea.configure(height=num_lines)
         self.messageArea.update()
 
     def get_num_lines(self, widget):
@@ -215,21 +194,12 @@ class GUItk(object):
         self.textArea.insert(tk.END, text, "normal")
         self.textArea.focus()
 
-    def get_pos(self):
-        # The geometry() method sets a size for the window and positions it on
-        # the screen. The first two parameters are width and height of
-        # the window. The last two parameters are x and y screen coordinates.
-        # geometry("250x150+300+300")
-        # TODO: Fix so that get_post does not set a global value!!
-        geom = self.boxRoot.geometry()  # "628x672+300+200"
-        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
-
-    # Methods executing when a key is pressed -------------------------------
-    def x_pressed(self, event):
+    # Methods executing when a key is pressed
+    def x_pressed(self, _):
         self.callback(self, command='x', text=self.get_text())
 
-    def cancel_pressed(self, event):
+    def cancel_button_pressed(self, _):
         self.callback(self, command='cancel', text=self.get_text())
 
-    def ok_button_pressed(self, event):
+    def ok_button_pressed(self, _):
         self.callback(self, command='update', text=self.get_text())

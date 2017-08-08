@@ -26,7 +26,7 @@ def tabLeft(event):
     boxRoot.event_generate("<Shift-Tab>")
 
 
-window_position = "+300+200"
+GLOBAL_WINDOW_POSITION = "+300+200"
 PROPORTIONAL_FONT_FAMILY = ("MS", "Sans", "Serif")
 MONOSPACE_FONT_FAMILY = "Courier"
 PROPORTIONAL_FONT_SIZE = 10
@@ -36,6 +36,6 @@ STANDARD_SELECTION_EVENTS = ["Return", "Button-1", "space"]
 prop_font_line_length = 62
 fixw_font_line_length = 80
 num_lines_displayed = 50
-default_hpad_in_chars = 2
+DEFAULT_PADDING = 2
 runningPython27 = False
 runningPython34 = False

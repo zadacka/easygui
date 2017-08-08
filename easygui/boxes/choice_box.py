@@ -190,7 +190,7 @@ class GUItk(object):
 
         self.config_root(title)
 
-        self.set_pos(easygui.boxes.window_position)  # GLOBAL POSITION
+        self.set_pos(easygui.boxes.GLOBAL_WINDOW_POSITION)  # GLOBAL POSITION
 
         self.create_msg_widget(msg)
 
@@ -253,7 +253,7 @@ class GUItk(object):
 
     def set_pos(self, pos=None):
         if not pos:
-            pos = easygui.boxes.window_position
+            pos = easygui.boxes.GLOBAL_WINDOW_POSITION
         self.boxRoot.geometry(pos)
 
     def get_pos(self):
@@ -262,7 +262,7 @@ class GUItk(object):
         # the window. The last two parameters are x and y screen coordinates.
         # geometry("250x150+300+300")
         geom = self.boxRoot.geometry()  # "628x672+300+200"
-        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
+        easygui.boxes.GLOBAL_WINDOW_POSITION = '+' + geom.split('+', 1)[1]
 
     def preselect_choice(self, preselect):
         print(preselect)
@@ -322,9 +322,9 @@ class GUItk(object):
             state=tk.DISABLED,
             background=self.boxRoot.config()["background"][-1],
             relief='flat',
-            padx=(easygui.boxes.default_hpad_in_chars *
+            padx=(easygui.boxes.DEFAULT_PADDING *
                   self.calc_character_width()),
-            pady=(easygui.boxes.default_hpad_in_chars *
+            pady=(easygui.boxes.DEFAULT_PADDING *
                   self.calc_character_width()),
             wrap=tk.WORD,
 

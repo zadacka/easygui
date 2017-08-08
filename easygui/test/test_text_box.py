@@ -33,5 +33,5 @@ class TestTextBox(unittest.TestCase):
             mock_guitk_instance.run.assert_called_once_with()
             self.assertEqual(text_box.ui, None)
 
-    # def test_text_box_interactive(self):
-    #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)
+    def test_text_box_interactive(self):
+        tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)

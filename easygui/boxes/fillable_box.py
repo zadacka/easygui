@@ -48,7 +48,7 @@ def __fillablebox(msg, title="", default="", mask=None, image=None, root=None):
     boxRoot.protocol('WM_DELETE_WINDOW', __enterboxQuit)
     boxRoot.title(title)
     boxRoot.iconname('Dialog')
-    boxRoot.geometry(easygui.boxes.window_position)
+    boxRoot.geometry(easygui.boxes.GLOBAL_WINDOW_POSITION)
     boxRoot.bind("<Escape>", __enterboxCancel)
 
     # ------------- define the messageFrame ---------------------------------

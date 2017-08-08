@@ -325,7 +325,7 @@ class GUItk(object):
         # the window. The last two parameters are x and y screen coordinates.
         # geometry("250x150+300+300")
         geom = self.boxRoot.geometry()  # "628x672+300+200"
-        easygui.boxes.window_position = '+' + geom.split('+', 1)[1]
+        easygui.boxes.GLOBAL_WINDOW_POSITION = '+' + geom.split('+', 1)[1]
 
     # Methods executing when a key is pressed -------------------------------
     def x_pressed(self):
@@ -356,7 +356,7 @@ class GUItk(object):
             raise ValueError(
                 "failed to parse geometry string: {}".format(self.boxRoot.geometry()))
         width, height, xoffset, yoffset = [int(s) for s in m.groups()]
-        easygui.boxes.window_position = '{0:+g}{1:+g}'.format(xoffset, yoffset)
+        easygui.boxes.GLOBAL_WINDOW_POSITION = '{0:+g}{1:+g}'.format(xoffset, yoffset)
 
         # Hotkeys
         if self._buttons:
@@ -381,7 +381,7 @@ class GUItk(object):
     def configure_root(self, title):
         self.boxRoot.title(title)
 
-        self.set_pos(easygui.boxes.window_position)
+        self.set_pos(easygui.boxes.GLOBAL_WINDOW_POSITION)
 
         # Resize setup
         self.boxRoot.columnconfigure(0, weight=10)
@@ -400,11 +400,11 @@ class GUItk(object):
             self.boxRoot,
             width=self.width_in_chars,
             state=tk.DISABLED,
-            padx=(easygui.boxes.default_hpad_in_chars) *
+            padx=(easygui.boxes.DEFAULT_PADDING) *
                  self.calc_character_width(),
             relief="flat",
             background=self.boxRoot.config()["background"][-1],
-            pady=easygui.boxes.default_hpad_in_chars *
+            pady=easygui.boxes.DEFAULT_PADDING *
                  self.calc_character_width(),
             wrap=tk.WORD,
         )
