@@ -12,7 +12,10 @@ from easygui.boxes import DEFAULT_PADDING, to_string, fixw_font_line_length, pro
 def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
     """ Helper method to pre-configure the class."""
     tb = TextBox(msg=msg, title=title, text=text, codebox=codebox, callback=callback)
-    return tb.run() if run else tb
+    # TODO: confirm behavioural change is okay (always return tb, not sometimes tb sometimes string)
+    if run:
+        tb.run()
+    return tb
 
 
 class TextBox(object):
@@ -35,9 +38,6 @@ class TextBox(object):
         self._msg = msg
 
     def run(self):
-        """ Start the ui.
-            Returns None if cancel is pressed, else returns the contents of textArea
-        """
         self.ui.run()
         self.ui = None
         return self._text
@@ -93,24 +93,12 @@ class GUItk(object):
     def __init__(self, msg, title, text, code_box, callback):
         self.callback = callback
 
-        # Root box
-        self.boxRoot = tk.Tk()
-        self.boxRoot.title(title)
-        self.boxRoot.iconname('Dialog')
-        self.boxRoot.geometry(GLOBAL_WINDOW_POSITION)
+        self.box_root = self.configure_box_root(title)
 
-        self.boxRoot.protocol('WM_DELETE_WINDOW', self.x_pressed)  # Quit when x button pressed
-        self.boxRoot.bind("<Escape>", self.cancel_button_pressed)
-
-        if code_box:
-            padding = DEFAULT_PADDING * tk_Font.nametofont("TkFixedFont").measure('W')
-            width_in_chars = fixw_font_line_length
-        else:
-            padding = DEFAULT_PADDING * tk_Font.nametofont("TkTextFont").measure('W')
-            width_in_chars = prop_font_line_length
+        padding, width_in_chars = self.get_width_and_padding(code_box)
 
         # Message frame
-        message_frame = tk.Frame(self.boxRoot, padx=padding, )
+        message_frame = tk.Frame(self.box_root, padx=padding, )
         message_frame.pack(side=tk.TOP, expand=1, fill='both')
 
         self.messageArea = tk.Text(message_frame, width=width_in_chars, state=tk.DISABLED, padx=padding, pady=padding, wrap=tk.WORD, )
@@ -118,20 +106,20 @@ class GUItk(object):
         self.messageArea.pack(side=tk.TOP, expand=1, fill='both')
 
         # Text frame
-        text_frame = tk.Frame(self.boxRoot, padx=padding, )
+        text_frame = tk.Frame(self.box_root, padx=padding, )
         text_frame.pack(side=tk.TOP)
 
         self.textArea = tk.Text(text_frame, padx=padding, pady=padding, height=25, width=width_in_chars)
         self.textArea.configure(wrap=tk.NONE if code_box else tk.WORD)
 
-        self.boxRoot.bind("<Next>", self.textArea.yview_scroll(1, tk.PAGES))
-        self.boxRoot.bind("<Prior>", self.textArea.yview_scroll(-1, tk.PAGES))
+        self.box_root.bind("<Next>", self.textArea.yview_scroll(1, tk.PAGES))
+        self.box_root.bind("<Prior>", self.textArea.yview_scroll(-1, tk.PAGES))
 
-        self.boxRoot.bind("<Right>", self.textArea.xview_scroll(1, tk.PAGES))
-        self.boxRoot.bind("<Left>", self.textArea.xview_scroll(-1, tk.PAGES))
+        self.box_root.bind("<Right>", self.textArea.xview_scroll(1, tk.PAGES))
+        self.box_root.bind("<Left>", self.textArea.xview_scroll(-1, tk.PAGES))
 
-        self.boxRoot.bind("<Down>", self.textArea.yview_scroll(1, tk.UNITS))
-        self.boxRoot.bind("<Up>", self.textArea.yview_scroll(-1, tk.UNITS))
+        self.box_root.bind("<Down>", self.textArea.yview_scroll(1, tk.UNITS))
+        self.box_root.bind("<Up>", self.textArea.yview_scroll(-1, tk.UNITS))
 
         vertical_scrollbar = tk.Scrollbar(text_frame, orient=tk.VERTICAL, command=self.textArea.yview)
         self.textArea.configure(yscrollcommand=vertical_scrollbar.set)
@@ -149,7 +137,7 @@ class GUItk(object):
         self.set_text(text)
 
         # Button frame
-        buttons_frame = tk.Frame(self.boxRoot)
+        buttons_frame = tk.Frame(self.box_root)
         buttons_frame.pack(side=tk.TOP)
 
         cancel_button = tk.Button(buttons_frame, takefocus=tk.YES, text="Cancel", height=1, width=6)
@@ -163,12 +151,31 @@ class GUItk(object):
         ok_button.bind("<Return>", self.ok_button_pressed)
         ok_button.bind("<Button-1>", self.ok_button_pressed)
 
+    def get_width_and_padding(self, code_box):
+        if code_box:
+            padding = DEFAULT_PADDING * tk_Font.nametofont("TkFixedFont").measure('W')
+            width_in_chars = fixw_font_line_length
+        else:
+            padding = DEFAULT_PADDING * tk_Font.nametofont("TkTextFont").measure('W')
+            width_in_chars = prop_font_line_length
+
+        return padding, width_in_chars
+
+    def configure_box_root(self, title):
+        box_root = tk.Tk()
+        box_root.title(title)
+        box_root.iconname('Dialog')
+        box_root.geometry(GLOBAL_WINDOW_POSITION)
+        box_root.protocol('WM_DELETE_WINDOW', self.x_pressed)  # Quit when x button pressed
+        box_root.bind("<Escape>", self.cancel_button_pressed)
+        return box_root
+
     def run(self):
-        self.boxRoot.mainloop()
-        self.boxRoot.destroy()
+        self.box_root.mainloop()
+        self.box_root.destroy()
 
     def stop(self):
-        self.boxRoot.quit()
+        self.box_root.quit()
 
     def set_msg_area(self, msg):
         self.messageArea.config(state=tk.NORMAL)
