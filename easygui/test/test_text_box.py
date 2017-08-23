@@ -2,7 +2,7 @@ import unittest
 
 from mock import mock, patch, Mock, call
 
-from easygui.boxes.text_box import TextBox, textbox
+from easygui.boxes.text_box import TextBox, textbox, GUItk
 
 MODBASE = 'easygui.boxes.text_box'
 
@@ -113,7 +113,14 @@ class TestTextBox(unittest.TestCase):
         mock_ui.set_msg_area.assert_has_calls([call(new_text), call('')])
 
 
-
+@mock.patch(MODBASE + '.tk')
+class TestGUItk(unittest.TestCase):
+    def test_instantiation(self, mock_tk_module):
+        ui = GUItk(msg=TEST_MESSAGE, title=TEST_TITLE, text=TEST_TEXT, code_box=TEST_CODEBOX, callback=TEST_CALLBACK)
+        self.assertEqual(ui.callback, TEST_CALLBACK)
+        self.assertEqual(ui.box_root, mock_tk_module.Tk.return_value)
+        self.assertEqual(ui.message_area, mock_tk_module.Text.return_value)
+        self.assertEqual(ui.text_area, mock_tk_module.Text.return_value)
 
     # def test_text_box_interactive(self):
     #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)

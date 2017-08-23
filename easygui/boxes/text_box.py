@@ -1,12 +1,24 @@
 try:
     import tkinter as tk  # python 3
-    import tkinter.font as tk_Font
 except (SystemError, ValueError, ImportError):
     import Tkinter as tk  # python 2
-    import tkFont as tk_Font
 
-from easygui.boxes import DEFAULT_PADDING, to_string, fixw_font_line_length, prop_font_line_length, \
+from easygui.boxes import to_string, fixw_font_line_length, prop_font_line_length, \
     GLOBAL_WINDOW_POSITION
+
+DEFAULT_PADDING = 2
+REGULAR_FONT_WIDTH = 13
+FIXED_FONT_WIDTH = 7
+
+
+def get_width_and_padding(code_box):
+    if code_box:
+        padding = DEFAULT_PADDING * FIXED_FONT_WIDTH
+        width_in_chars = fixw_font_line_length
+    else:
+        padding = DEFAULT_PADDING * REGULAR_FONT_WIDTH
+        width_in_chars = prop_font_line_length
+    return padding, width_in_chars
 
 
 def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
@@ -94,38 +106,53 @@ class GUItk(object):
         self.callback = callback
 
         self.box_root = self.configure_box_root(title)
+        self.message_area = self.configure_message_area(box_root=self.box_root, code_box=code_box)
+        self.text_area = self.configure_text_area(box_root=self.box_root, code_box=code_box)
+        self.configure_buttons()
 
-        padding, width_in_chars = self.get_width_and_padding(code_box)
+        self.set_msg_area("" if msg is None else msg)
+        self.set_text(text)
 
-        # Message frame
-        message_frame = tk.Frame(self.box_root, padx=padding, )
+    def configure_box_root(self, title):
+        box_root = tk.Tk()
+        box_root.title(title)
+        box_root.iconname('Dialog')
+        box_root.geometry(GLOBAL_WINDOW_POSITION)
+        box_root.protocol('WM_DELETE_WINDOW', self.x_pressed)  # Quit when x button pressed
+        box_root.bind("<Escape>", self.cancel_button_pressed)
+        return box_root
+
+    @staticmethod
+    def configure_message_area(box_root, code_box):
+        padding, width_in_chars = get_width_and_padding(code_box)
+
+        message_frame = tk.Frame(box_root, padx=padding)
         message_frame.pack(side=tk.TOP, expand=1, fill='both')
 
-        self.messageArea = tk.Text(message_frame, width=width_in_chars, state=tk.DISABLED, padx=padding, pady=padding, wrap=tk.WORD, )
-        self.set_msg_area("" if msg is None else msg)
-        self.messageArea.pack(side=tk.TOP, expand=1, fill='both')
+        message_area = tk.Text(master=message_frame,
+                               width=width_in_chars,
+                               state=tk.DISABLED,
+                               padx=padding,
+                               pady=padding,
+                               wrap=tk.WORD)
+        message_area.pack(side=tk.TOP, expand=1, fill='both')
+        return message_area
 
-        # Text frame
-        text_frame = tk.Frame(self.box_root, padx=padding, )
+    @staticmethod
+    def configure_text_area(box_root, code_box):
+        padding, width_in_chars = get_width_and_padding(code_box)
+
+        text_frame = tk.Frame(box_root, padx=padding, )
         text_frame.pack(side=tk.TOP)
 
-        self.textArea = tk.Text(text_frame, padx=padding, pady=padding, height=25, width=width_in_chars)
-        self.textArea.configure(wrap=tk.NONE if code_box else tk.WORD)
+        text_area = tk.Text(text_frame, padx=padding, pady=padding, height=25, width=width_in_chars)
+        text_area.configure(wrap=tk.NONE if code_box else tk.WORD)
 
-        self.box_root.bind("<Next>", self.textArea.yview_scroll(1, tk.PAGES))
-        self.box_root.bind("<Prior>", self.textArea.yview_scroll(-1, tk.PAGES))
+        vertical_scrollbar = tk.Scrollbar(text_frame, orient=tk.VERTICAL, command=text_area.yview)
+        text_area.configure(yscrollcommand=vertical_scrollbar.set)
 
-        self.box_root.bind("<Right>", self.textArea.xview_scroll(1, tk.PAGES))
-        self.box_root.bind("<Left>", self.textArea.xview_scroll(-1, tk.PAGES))
-
-        self.box_root.bind("<Down>", self.textArea.yview_scroll(1, tk.UNITS))
-        self.box_root.bind("<Up>", self.textArea.yview_scroll(-1, tk.UNITS))
-
-        vertical_scrollbar = tk.Scrollbar(text_frame, orient=tk.VERTICAL, command=self.textArea.yview)
-        self.textArea.configure(yscrollcommand=vertical_scrollbar.set)
-
-        horizontal_scrollbar = tk.Scrollbar(text_frame, orient=tk.HORIZONTAL, command=self.textArea.xview)
-        self.textArea.configure(xscrollcommand=horizontal_scrollbar.set)
+        horizontal_scrollbar = tk.Scrollbar(text_frame, orient=tk.HORIZONTAL, command=text_area.xview)
+        text_area.configure(xscrollcommand=horizontal_scrollbar.set)
 
         if code_box:
             # no word-wrapping for code so we need a horizontal scroll bar
@@ -133,10 +160,20 @@ class GUItk(object):
         vertical_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # pack textArea last so bottom scrollbar displays properly
-        self.textArea.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
-        self.set_text(text)
+        text_area.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
 
-        # Button frame
+        box_root.bind("<Next>", text_area.yview_scroll(1, tk.PAGES))
+        box_root.bind("<Prior>", text_area.yview_scroll(-1, tk.PAGES))
+
+        box_root.bind("<Right>", text_area.xview_scroll(1, tk.PAGES))
+        box_root.bind("<Left>", text_area.xview_scroll(-1, tk.PAGES))
+
+        box_root.bind("<Down>", text_area.yview_scroll(1, tk.UNITS))
+        box_root.bind("<Up>", text_area.yview_scroll(-1, tk.UNITS))
+
+        return text_area
+
+    def configure_buttons(self):
         buttons_frame = tk.Frame(self.box_root)
         buttons_frame.pack(side=tk.TOP)
 
@@ -151,25 +188,6 @@ class GUItk(object):
         ok_button.bind("<Return>", self.ok_button_pressed)
         ok_button.bind("<Button-1>", self.ok_button_pressed)
 
-    def get_width_and_padding(self, code_box):
-        if code_box:
-            padding = DEFAULT_PADDING * tk_Font.nametofont("TkFixedFont").measure('W')
-            width_in_chars = fixw_font_line_length
-        else:
-            padding = DEFAULT_PADDING * tk_Font.nametofont("TkTextFont").measure('W')
-            width_in_chars = prop_font_line_length
-
-        return padding, width_in_chars
-
-    def configure_box_root(self, title):
-        box_root = tk.Tk()
-        box_root.title(title)
-        box_root.iconname('Dialog')
-        box_root.geometry(GLOBAL_WINDOW_POSITION)
-        box_root.protocol('WM_DELETE_WINDOW', self.x_pressed)  # Quit when x button pressed
-        box_root.bind("<Escape>", self.cancel_button_pressed)
-        return box_root
-
     def run(self):
         self.box_root.mainloop()
         self.box_root.destroy()
@@ -178,28 +196,29 @@ class GUItk(object):
         self.box_root.quit()
 
     def set_msg_area(self, msg):
-        self.messageArea.config(state=tk.NORMAL)
-        self.messageArea.delete(1.0, tk.END)
-        self.messageArea.insert(tk.END, msg)
-        self.messageArea.config(state=tk.DISABLED)
+        self.message_area.config(state=tk.NORMAL)
+        self.message_area.delete(1.0, tk.END)
+        self.message_area.insert(tk.END, msg)
+        self.message_area.config(state=tk.DISABLED)
         # Adjust msg height
-        self.messageArea.update()
-        num_lines = self.get_num_lines(self.messageArea)
-        self.messageArea.configure(height=num_lines)
-        self.messageArea.update()
+        self.message_area.update()
+        num_lines = self.get_num_lines(self.message_area)
+        self.message_area.configure(height=num_lines)
+        self.message_area.update()
 
-    def get_num_lines(self, widget):
+    @staticmethod
+    def get_num_lines(widget):
         end_position = widget.index(tk.END)  # '4.0'
         end_line = end_position.split('.')[0]  # 4
         return int(end_line) + 1  # 5
 
     def get_text(self):
-        return self.textArea.get(0.0, 'end-1c')
+        return self.text_area.get(0.0, 'end-1c')
 
     def set_text(self, text):
-        self.textArea.delete(1.0, tk.END)
-        self.textArea.insert(tk.END, text, "normal")
-        self.textArea.focus()
+        self.text_area.delete(1.0, tk.END)
+        self.text_area.insert(tk.END, text, "normal")
+        self.text_area.focus()
 
     # Methods executing when a key is pressed
     def x_pressed(self, _):
