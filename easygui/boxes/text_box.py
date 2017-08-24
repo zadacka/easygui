@@ -105,15 +105,15 @@ class GUItk(object):
     def __init__(self, msg, title, text, code_box, callback):
         self.callback = callback
 
-        self.box_root = self.configure_box_root(title)
-        self.message_area = self.configure_message_area(box_root=self.box_root, code_box=code_box)
-        self.text_area = self.configure_text_area(box_root=self.box_root, code_box=code_box)
-        self.configure_buttons()
+        self.box_root = self._configure_box_root(title)
+        self.message_area = self._configure_message_area(box_root=self.box_root, code_box=code_box)
+        self.text_area = self._configure_text_area(box_root=self.box_root, code_box=code_box)
+        self._configure_buttons()
 
         self.set_msg_area("" if msg is None else msg)
         self.set_text(text)
 
-    def configure_box_root(self, title):
+    def _configure_box_root(self, title):
         box_root = tk.Tk()
         box_root.title(title)
         box_root.iconname('Dialog')
@@ -123,7 +123,7 @@ class GUItk(object):
         return box_root
 
     @staticmethod
-    def configure_message_area(box_root, code_box):
+    def _configure_message_area(box_root, code_box):
         padding, width_in_chars = get_width_and_padding(code_box)
 
         message_frame = tk.Frame(box_root, padx=padding)
@@ -139,7 +139,7 @@ class GUItk(object):
         return message_area
 
     @staticmethod
-    def configure_text_area(box_root, code_box):
+    def _configure_text_area(box_root, code_box):
         padding, width_in_chars = get_width_and_padding(code_box)
 
         text_frame = tk.Frame(box_root, padx=padding, )
@@ -173,7 +173,7 @@ class GUItk(object):
 
         return text_area
 
-    def configure_buttons(self):
+    def _configure_buttons(self):
         buttons_frame = tk.Frame(self.box_root)
         buttons_frame.pack(side=tk.TOP)
 
@@ -202,15 +202,9 @@ class GUItk(object):
         self.message_area.config(state=tk.DISABLED)
         # Adjust msg height
         self.message_area.update()
-        num_lines = self.get_num_lines(self.message_area)
-        self.message_area.configure(height=num_lines)
+        num_lines, _ = self.message_area.index(tk.END).split('.')
+        self.message_area.configure(height=int(num_lines) + 1)
         self.message_area.update()
-
-    @staticmethod
-    def get_num_lines(widget):
-        end_position = widget.index(tk.END)  # '4.0'
-        end_line = end_position.split('.')[0]  # 4
-        return int(end_line) + 1  # 5
 
     def get_text(self):
         return self.text_area.get(0.0, 'end-1c')

@@ -4,6 +4,12 @@ from mock import mock, patch, Mock, call
 
 from easygui.boxes.text_box import TextBox, textbox, GUItk
 
+try:
+    import tkinter as tk  # python 3
+except (SystemError, ValueError, ImportError):
+    import Tkinter as tk  # python 2
+
+
 MODBASE = 'easygui.boxes.text_box'
 
 TEST_MESSAGE = 'example message'
@@ -113,14 +119,44 @@ class TestTextBox(unittest.TestCase):
         mock_ui.set_msg_area.assert_has_calls([call(new_text), call('')])
 
 
-@mock.patch(MODBASE + '.tk')
 class TestGUItk(unittest.TestCase):
-    def test_instantiation(self, mock_tk_module):
-        ui = GUItk(msg=TEST_MESSAGE, title=TEST_TITLE, text=TEST_TEXT, code_box=TEST_CODEBOX, callback=TEST_CALLBACK)
-        self.assertEqual(ui.callback, TEST_CALLBACK)
-        self.assertEqual(ui.box_root, mock_tk_module.Tk.return_value)
-        self.assertEqual(ui.message_area, mock_tk_module.Text.return_value)
-        self.assertEqual(ui.text_area, mock_tk_module.Text.return_value)
+    def setUp(self):
+        self.ui = GUItk(msg=TEST_MESSAGE, title=TEST_TITLE, text=TEST_TEXT, code_box=TEST_CODEBOX, callback=TEST_CALLBACK)
 
-    # def test_text_box_interactive(self):
-    #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)
+    def test_instantiation(self):
+        isinstance(self.ui.box_root, tk.Tk)
+        isinstance(self.ui.message_area, tk.Text)
+        isinstance(self.ui.text_area, tk.Text)
+
+        self.assertEqual(self.ui.callback, TEST_CALLBACK)
+        self.assertEqual(self.ui.message_area.get(0.0, 'end-1c'), TEST_MESSAGE)
+        self.assertEqual(self.ui.text_area.get(0.0, 'end-1c'), TEST_TEXT)
+        # title has been passed to windowing system
+
+    def test_run(self):
+        self.ui.box_root = Mock()
+        self.ui.run()
+        self.ui.box_root.mainloop.assert_called_once_with()
+        self.ui.box_root.destroy.assert_called_once_with()
+
+    def test_stop(self):
+        self.ui.box_root = Mock()
+        self.ui.stop()
+        self.ui.box_root.quit.assert_called_once_with()
+
+    def test_set_msg_area(self):
+        new_text = 'some new text'
+        self.ui.set_msg_area(msg=new_text)
+        self.assertEqual(self.ui.message_area.get(1.0, 'end-1c'), new_text)
+
+    def test_get_text(self):
+        actual = self.ui.get_text()
+        self.assertEqual(actual, TEST_TEXT)
+
+    def test_set_text(self):
+        new_text = 'some new text'
+        self.ui.set_text(new_text)
+        self.assertEqual(self.ui.text_area.get(1.0, 'end-1c'), new_text)
+
+# def test_text_box_interactive(self):
+        #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)
