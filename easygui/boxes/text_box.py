@@ -131,7 +131,6 @@ class GUItk(object):
 
         message_area = tk.Text(master=message_frame,
                                width=width_in_chars,
-                               state=tk.DISABLED,
                                padx=padding,
                                pady=padding,
                                wrap=tk.WORD)
@@ -196,21 +195,14 @@ class GUItk(object):
         self.box_root.quit()
 
     def set_msg_area(self, msg):
-        # self.message_area.delete(1.0, tk.END)
-        # self.message_area.insert(tk.END, msg, "normal")
-        # self.message_area.focus()
-        self.message_area.config(state=tk.NORMAL)
         self.message_area.delete(1.0, tk.END)
         self.message_area.insert(tk.END, msg)
-        self.message_area.config(state=tk.DISABLED)
-        # Adjust msg height
-        self.message_area.update()
         num_lines = self.get_num_lines()
-        self.message_area.configure(height=int(num_lines) + 1)
+        self.message_area.configure(height=int(num_lines))
         self.message_area.update()
 
     def get_text(self):
-        return self.text_area.get(0.0, 'end-1c')
+        return self.text_area.get(1.0, 'end-1c')
 
     def set_text(self, text):
         self.text_area.delete(1.0, tk.END)

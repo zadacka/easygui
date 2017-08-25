@@ -120,7 +120,6 @@ class TestTextBox(unittest.TestCase):
         mock_ui.set_msg_area.assert_has_calls([call(new_text), call('')])
 
 
-@unittest.skipIf(not os.environ.get("DISPLAY"), reason='Skipping GUI as no DISPLAY variable set')
 class TestGUItk(unittest.TestCase):
     def setUp(self):
         self.ui = GUItk(msg=TEST_MESSAGE, title=TEST_TITLE, text=TEST_TEXT, code_box=TEST_CODEBOX, callback=TEST_CALLBACK)
@@ -160,5 +159,5 @@ class TestGUItk(unittest.TestCase):
         self.ui.set_text(new_text)
         self.assertEqual(self.ui.text_area.get(1.0, 'end-1c'), new_text)
 
-# def test_text_box_interactive(self):
-        #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)
+    # def test_text_box_interactive(self):
+    #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)
