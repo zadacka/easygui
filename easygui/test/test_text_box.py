@@ -1,5 +1,6 @@
 import unittest
 
+import os
 from mock import mock, patch, Mock, call
 
 from easygui.boxes.text_box import TextBox, textbox, GUItk
@@ -119,6 +120,7 @@ class TestTextBox(unittest.TestCase):
         mock_ui.set_msg_area.assert_has_calls([call(new_text), call('')])
 
 
+@unittest.skipIf(not os.environ.get("DISPLAY"))
 class TestGUItk(unittest.TestCase):
     def setUp(self):
         self.ui = GUItk(msg=TEST_MESSAGE, title=TEST_TITLE, text=TEST_TEXT, code_box=TEST_CODEBOX, callback=TEST_CALLBACK)
