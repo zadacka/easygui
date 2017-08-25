@@ -260,7 +260,7 @@ class GUItk(object):
         #     size=global_state.PROPORTIONAL_FONT_SIZE)
 
         self.boxFont = tk_Font.nametofont("TkFixedFont")
-        self.width_in_chars = easygui.boxes.fixw_font_line_length
+        self.width_in_chars = easygui.boxes.FIXW_FONT_LINE_LENGTH
 
         # default_font.configure(size=global_state.PROPORTIONAL_FONT_SIZE)
 

@@ -176,7 +176,7 @@ class GUItk(object):
 
         self.choices = choices
 
-        self.width_in_chars = easygui.boxes.prop_font_line_length
+        self.width_in_chars = easygui.boxes.PROP_FONT_LINE_LENGTH
         # Initialize self.selected_choices
         # This is the value that will be returned if the user clicks the close
         # icon

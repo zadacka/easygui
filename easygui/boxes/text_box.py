@@ -3,7 +3,7 @@ try:
 except (SystemError, ValueError, ImportError):
     import Tkinter as tk  # python 2
 
-from easygui.boxes import to_string, fixw_font_line_length, prop_font_line_length, \
+from easygui.boxes import to_string, FIXW_FONT_LINE_LENGTH, PROP_FONT_LINE_LENGTH, \
     GLOBAL_WINDOW_POSITION
 
 DEFAULT_PADDING = 2
@@ -14,10 +14,10 @@ FIXED_FONT_WIDTH = 7
 def get_width_and_padding(code_box):
     if code_box:
         padding = DEFAULT_PADDING * FIXED_FONT_WIDTH
-        width_in_chars = fixw_font_line_length
+        width_in_chars = FIXW_FONT_LINE_LENGTH
     else:
         padding = DEFAULT_PADDING * REGULAR_FONT_WIDTH
-        width_in_chars = prop_font_line_length
+        width_in_chars = PROP_FONT_LINE_LENGTH
     return padding, width_in_chars
 
 
@@ -196,13 +196,16 @@ class GUItk(object):
         self.box_root.quit()
 
     def set_msg_area(self, msg):
+        # self.message_area.delete(1.0, tk.END)
+        # self.message_area.insert(tk.END, msg, "normal")
+        # self.message_area.focus()
         self.message_area.config(state=tk.NORMAL)
         self.message_area.delete(1.0, tk.END)
         self.message_area.insert(tk.END, msg)
         self.message_area.config(state=tk.DISABLED)
         # Adjust msg height
         self.message_area.update()
-        num_lines, _ = self.message_area.index(tk.END).split('.')
+        num_lines = self.get_num_lines()
         self.message_area.configure(height=int(num_lines) + 1)
         self.message_area.update()
 
@@ -223,3 +226,7 @@ class GUItk(object):
 
     def ok_button_pressed(self, _):
         self.callback(self, command='update', text=self.get_text())
+
+    def get_num_lines(self):
+        num_lines, _ = self.message_area.index(tk.END).split('.')
+        return num_lines
