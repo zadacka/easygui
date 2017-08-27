@@ -3,22 +3,7 @@ try:
 except ImportError:
     import Tkinter as tk  # python 2
 
-from easygui.boxes import to_string, FIXW_FONT_LINE_LENGTH, PROP_FONT_LINE_LENGTH, \
-    GLOBAL_WINDOW_POSITION
-
-DEFAULT_PADDING = 2
-REGULAR_FONT_WIDTH = 13
-FIXED_FONT_WIDTH = 7
-
-
-def get_width_and_padding(code_box):
-    if code_box:
-        padding = DEFAULT_PADDING * FIXED_FONT_WIDTH
-        width_in_chars = FIXW_FONT_LINE_LENGTH
-    else:
-        padding = DEFAULT_PADDING * REGULAR_FONT_WIDTH
-        width_in_chars = PROP_FONT_LINE_LENGTH
-    return padding, width_in_chars
+from easygui.boxes import to_string, GLOBAL_WINDOW_POSITION, get_width_and_padding
 
 
 def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
@@ -52,6 +37,7 @@ class TextBox(object):
     def run(self):
         self.ui.run()
         self.ui = None
+        # TODO: confirm this behaviour: why return text?
         return self._text
 
     def stop(self):
