@@ -1,3 +1,5 @@
+from easygui.boxes.base_box import BaseBox
+
 try:
     import tkinter as tk  # python 3
 except ImportError:
@@ -6,7 +8,7 @@ except ImportError:
 from easygui.boxes import to_string, GLOBAL_WINDOW_POSITION, get_width_and_padding
 
 
-def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
+def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
     """ Helper method to pre-configure the class."""
     tb = TextBox(msg=msg, title=title, text=text, codebox=codebox, callback=callback)
     # TODO: confirm behavioural change is okay (always return tb, not sometimes tb sometimes string)
@@ -15,7 +17,7 @@ def textbox(msg="", title=" ", text="", codebox=False, callback=None, run=True):
     return tb
 
 
-class TextBox(object):
+class TextBox(BaseBox):
     """ Display a message and a editable text field pre-populated with 'text'.
         Separate user from UI implementation and make agnostic to underlying library (TK)
             so that other libraries (WX, QT) could be used without negative user impact.
@@ -34,28 +36,6 @@ class TextBox(object):
         self._text = text
         self._msg = msg
 
-    def run(self):
-        self.ui.run()
-        self.ui = None
-        # TODO: confirm this behaviour: why return text?
-        return self._text
-
-    def stop(self):
-        self.ui.stop()
-
-    def callback_ui(self, ui, command, text):
-        """ This method is executed when ok, cancel, or x is pressed in the ui. """
-        if command == 'update':  # OK was pressed
-            self._text = text
-            if self.callback:
-                # If a callback was set, call main process
-                self.callback(self)
-            else:
-                self.stop()
-        elif command in ('x', 'cancel'):
-            self.stop()
-            self._text = None
-
     @property
     def text(self):
         """Text in text Area"""
@@ -71,33 +51,14 @@ class TextBox(object):
         self._text = ""
         self.ui.set_text(self._text)
 
-    @property
-    def msg(self):
-        """Text in msg Area"""
-        return self._msg
 
-    @msg.setter
-    def msg(self, msg):
-        self._msg = to_string(msg)
-        self.ui.set_msg_area(self._msg)
-
-    @msg.deleter
-    def msg(self):
-        self._msg = ""
-        self.ui.set_msg_area(self._msg)
-
-
-class GUItk(object):
-    def __init__(self, msg, title, text, code_box, callback):
+class BaseGUItk(object):
+    def __init__(self, msg, title, code_box, callback):
         self.callback = callback
 
         self.box_root = self._configure_box_root(title)
         self.message_area = self._configure_message_area(box_root=self.box_root, code_box=code_box)
-        self.text_area = self._configure_text_area(box_root=self.box_root, code_box=code_box)
-        self._configure_buttons()
-
         self.set_msg_area("" if msg is None else msg)
-        self.set_text(text)
 
     def _configure_box_root(self, title):
         box_root = tk.Tk()
@@ -122,6 +83,34 @@ class GUItk(object):
                                wrap=tk.WORD)
         message_area.pack(side=tk.TOP, expand=1, fill='both')
         return message_area
+
+    def set_msg_area(self, msg):
+        self.message_area.delete(1.0, tk.END)
+        self.message_area.insert(tk.END, msg)
+        num_lines, _ = self.message_area.index(tk.END).split('.')
+        self.message_area.configure(height=int(num_lines))
+        self.message_area.update()
+
+    def handle_callback(self, command):
+        self.callback(command=command)
+
+    # Methods executing when a key is pressed
+    def x_pressed(self, _):
+        self.handle_callback(command='x')
+
+    def cancel_button_pressed(self, _):
+        self.callback(self, command='cancel')
+
+
+class GUItk(BaseGUItk):
+
+    def __init__(self, msg, title, text, code_box, callback):
+        super(GUItk, self).__init__(msg, title, code_box, callback)
+
+        self.text_area = self._configure_text_area(box_root=self.box_root, code_box=code_box)
+        self._configure_buttons()
+
+        self.set_text(text)
 
     @staticmethod
     def _configure_text_area(box_root, code_box):
@@ -180,13 +169,6 @@ class GUItk(object):
     def stop(self):
         self.box_root.quit()
 
-    def set_msg_area(self, msg):
-        self.message_area.delete(1.0, tk.END)
-        self.message_area.insert(tk.END, msg)
-        num_lines, _ = self.message_area.index(tk.END).split('.')
-        self.message_area.configure(height=int(num_lines))
-        self.message_area.update()
-
     def get_text(self):
         return self.text_area.get(1.0, 'end-1c')
 
@@ -195,13 +177,10 @@ class GUItk(object):
         self.text_area.insert(tk.END, text, "normal")
         self.text_area.focus()
 
+    def handle_callback(self, command):
+        self.callback(command=command, text=self.get_text())
+
     # Methods executing when a key is pressed
-    def x_pressed(self, _):
-        self.callback(self, command='x', text=self.get_text())
-
-    def cancel_button_pressed(self, _):
-        self.callback(self, command='cancel', text=self.get_text())
-
     def ok_button_pressed(self, _):
         self.callback(self, command='update', text=self.get_text())
 
