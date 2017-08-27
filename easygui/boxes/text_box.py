@@ -1,6 +1,6 @@
 try:
     import tkinter as tk  # python 3
-except (SystemError, ValueError, ImportError):
+except ImportError:
     import Tkinter as tk  # python 2
 
 from easygui.boxes import to_string, FIXW_FONT_LINE_LENGTH, PROP_FONT_LINE_LENGTH, \
@@ -197,7 +197,7 @@ class GUItk(object):
     def set_msg_area(self, msg):
         self.message_area.delete(1.0, tk.END)
         self.message_area.insert(tk.END, msg)
-        num_lines = self.get_num_lines()
+        num_lines, _ = self.message_area.index(tk.END).split('.')
         self.message_area.configure(height=int(num_lines))
         self.message_area.update()
 
@@ -219,6 +219,5 @@ class GUItk(object):
     def ok_button_pressed(self, _):
         self.callback(self, command='update', text=self.get_text())
 
-    def get_num_lines(self):
-        num_lines, _ = self.message_area.index(tk.END).split('.')
-        return num_lines
+if __name__ == '__main__':
+    tb = textbox(msg='example msg', title='example title', text='example text', codebox=False, callback=None, run=True)

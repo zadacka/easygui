@@ -1,6 +1,5 @@
 import unittest
 
-import os
 from mock import mock, patch, Mock, call
 
 from easygui.boxes.text_box import TextBox, textbox, GUItk
@@ -158,6 +157,3 @@ class TestGUItk(unittest.TestCase):
         new_text = 'some new text'
         self.ui.set_text(new_text)
         self.assertEqual(self.ui.text_area.get(1.0, 'end-1c'), new_text)
-
-    # def test_text_box_interactive(self):
-    #     tb = textbox(msg='msg', title='title', text='text', codebox=False, callback=None, run=True)
