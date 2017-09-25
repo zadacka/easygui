@@ -1,17 +1,8 @@
-"""
-
-.. moduleauthor:: easygui developers and Stephen Raymond Ferg
-.. default-domain:: py
-.. highlight:: python
-
-Version |release|
-"""
-
-import os
-import re
+§import re
 
 import easygui.boxes
 from easygui.boxes import utils as ut
+from easygui.boxes.base_box import BaseBox
 
 try:
     import tkinter as tk  # python 3
@@ -19,31 +10,6 @@ try:
 except (SystemError, ValueError, ImportError):
     import Tkinter as tk  # python 2
     import tkFont as tk_Font
-
-
-def demo_buttonbox_1():
-    print("hello from the demo")
-    value = buttonbox(
-        title="First demo",
-        msg="bonjour",
-        choices=["Button[1]", "Button[2]", "Button[3]"],
-        default_choice="Button[2]")
-    print("Return: {}".format(value))
-
-
-def demo_buttonbox_2():
-    package_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))  ;# My parent's directory
-    images = list()
-    images.append(os.path.join(package_dir, "python_and_check_logo.gif"))
-    images.append(os.path.join(package_dir, "zzzzz.gif"))
-    images.append(os.path.join(package_dir, "python_and_check_logo.png"))
-    images = [images, images, images, images, ]
-    value = buttonbox(
-        title="Second demo",
-        msg="Now is a good time to press buttons and show images",
-        choices=['ok', 'cancel'],
-        images=images)
-    print("Return: {}".format(value))
 
 # REF: http://stackoverflow.com/questions/1835018/python-check-if-an-object-is-a-list-or-tuple-but-not-string
 def is_sequence(arg):
@@ -53,34 +19,15 @@ def is_string(arg):
     ret_val = None
     try:
         ret_val = isinstance(arg, basestring) #Python 2
+        ret_val = isinstance(arg, basestring) #Python 2
     except:
         ret_val = isinstance(arg, str) #Python 3
     return ret_val
 
-def buttonbox(msg="",
-              title=" ",
-              choices=("Button[1]", "Button[2]", "Button[3]"),
-              image=None,
-              images=None,
-              default_choice=None,
-              cancel_choice=None,
-              callback=None,
-              run=True):
-    """
-    Display a msg, a title, an image, and a set of buttons.
-    The buttons are defined by the members of the choices global_state.
 
-    :param str msg: the msg to be displayed
-    :param str title: the window title
-    :param list choices: a list or tuple of the choices to be displayed
-    :param str image: (Only here for backward compatibility)
-    :param str images: Filename of image or iterable or iteratable of iterable to display
-    :param str default_choice: The choice you want highlighted when the gui appears
-    :return: the text of the button that the user selected
-
-
-
-    """
+def buttonbox(msg="", title=" ", choices=("Button[1]", "Button[2]", "Button[3]"),
+              image=None, images=None, default_choice=None, cancel_choice=None,
+              callback=None, run=True):
 
     if image and images:
         raise ValueError("Specify 'images' parameter only for buttonbox.")
@@ -101,55 +48,11 @@ def buttonbox(msg="",
         return reply
 
 
-class ButtonBox(object):
-    """ Display various types of button boxes
-
-    This object separates user from ui, defines which methods can
-    the user invoke and which properties can he change.
-
-    It also calls the ui in defined ways, so if other gui
-    library can be used (wx, qt) without breaking anything for the user.
-    """
+class ButtonBox(BaseBox):
 
     def __init__(self, msg, title, choices, images, default_choice, cancel_choice, callback):
-        """ Create box object
-
-        Parameters
-        ----------
-        msg : string
-            text displayed in the message area (instructions...)
-        title : str
-            the window title
-        choices : iterable of strings
-            build a button for each string in choices
-        images : iterable of filenames, or an iterable of iterables of filenames
-            displays each image
-        default_choice : string
-            one of the strings in choices to be the default selection
-        cancel_choice : string
-            if X or <esc> is pressed, it appears as if this button was pressed.
-        callback: function
-            if set, this function will be called when any button is pressed.
-
-        Returns
-        -------
-        object
-            The box object
-        """
-
         self.callback = callback
         self.ui = GUItk(msg, title, choices, images, default_choice, cancel_choice, self.callback_ui)
-
-    def run(self):
-        """ Start the ui """
-        self.ui.run()
-        ret_val = self._text
-        self.ui = None
-        return ret_val
-
-    def stop(self):
-        """ Stop the ui """
-        self.ui.stop()
 
     def callback_ui(self, ui, command):
         """ This method is executed when buttons or x is pressed in the ui.
@@ -162,28 +65,9 @@ class ButtonBox(object):
                 self.callback(self)
             else:
                 self.stop()
-        elif command == 'x':
+        elif command in ('x', 'cancel'):
             self.stop()
             self._text = None
-        elif command == 'cancel':
-            self.stop()
-            self._text = None
-
-    # methods to change properties --------------
-    @property
-    def msg(self):
-        """Text in msg Area"""
-        return self._msg
-
-    @msg.setter
-    def msg(self, msg):
-        self._msg = self.to_string(msg)
-        self.ui.set_msg(self._msg)
-
-    @msg.deleter
-    def msg(self):
-        self._msg = ""
-        self.ui.set_msg(self._msg)
 
     @property
     def choice(self):
@@ -194,25 +78,6 @@ class ButtonBox(object):
     def choice_rc(self):
         """ The row/column of the selected button (as a tuple) """
         return self._choice_rc
-
-    # Methods to validate what will be sent to ui ---------
-
-    def to_string(self, something):
-        try:
-            basestring  # python 2
-        except NameError:
-            basestring = str  # Python 3
-
-        if isinstance(something, basestring):
-            return something
-        try:
-            text = "".join(something)  # convert a list or a tuple to a string
-        except:
-            textbox(
-                "Exception when trying to convert {} to text in self.textArea"
-                .format(type(something)))
-            sys.exit(16)
-        return text
 
 
 class GUItk(object):
@@ -238,11 +103,6 @@ class GUItk(object):
         callback: function
             if set, this function will be called when any button is pressed.
 
-
-        Returns
-        -------
-        object
-            The ui object
         """
         self._title = title
         self._msg = msg
@@ -493,8 +353,3 @@ class GUItk(object):
         # Bind hotkeys
         for hk in [button['hotkey'] for button in buttons.values() if button['hotkey']]:
             self.boxRoot.bind_all(hk, lambda e: self.hotkey_pressed(e), add=True)
-
-
-if __name__ == '__main__':
-    demo_buttonbox_1()
-    demo_buttonbox_2()
