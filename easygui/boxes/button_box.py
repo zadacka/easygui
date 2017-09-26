@@ -1,4 +1,4 @@
-§import re
+import re
 
 import easygui.boxes
 from easygui.boxes import utils as ut
@@ -19,7 +19,6 @@ def is_string(arg):
     ret_val = None
     try:
         ret_val = isinstance(arg, basestring) #Python 2
-        ret_val = isinstance(arg, basestring) #Python 2
     except:
         ret_val = isinstance(arg, str) #Python 3
     return ret_val
@@ -29,6 +28,9 @@ def buttonbox(msg="", title=" ", choices=("Button[1]", "Button[2]", "Button[3]")
               image=None, images=None, default_choice=None, cancel_choice=None,
               callback=None, run=True):
 
+    # TODO: add deprecation warning for
+    # * the handling of 'image' and 'images' ... confusing to have multiple, simplify down to one
+    # * the function call should always run the method... if you just want an instance, use the constructor
     if image and images:
         raise ValueError("Specify 'images' parameter only for buttonbox.")
     if image:
@@ -104,12 +106,13 @@ class GUItk(object):
             if set, this function will be called when any button is pressed.
 
         """
+        self.callback = callback
+
         self._title = title
         self._msg = msg
         self._choices = choices
         self._default_choice = default_choice
         self._cancel_choice = cancel_choice
-        self.callback = callback
         self._choice_text = None
         self._choice_rc = None
         self._images = list()
