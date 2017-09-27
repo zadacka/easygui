@@ -44,8 +44,8 @@ REGULAR_FONT_WIDTH = 13
 FIXED_FONT_WIDTH = 7
 
 
-def get_width_and_padding(code_box):
-    if code_box:
+def get_width_and_padding(monospace):
+    if monospace:
         padding = DEFAULT_PADDING * FIXED_FONT_WIDTH
         width_in_chars = FIXW_FONT_LINE_LENGTH
     else:
