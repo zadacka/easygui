@@ -1,5 +1,3 @@
-from easygui.boxes.base_box import BaseBox
-
 try:
     import tkinter as tk  # python 3
 except ImportError:
@@ -17,7 +15,7 @@ def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
     return tb
 
 
-class TextBox(BaseBox):
+class TextBox(object):
     """ Display a message and a editable text field pre-populated with 'text'.
         Separate user from UI implementation and make agnostic to underlying library (TK)
             so that other libraries (WX, QT) could be used without negative user impact.
@@ -51,6 +49,44 @@ class TextBox(BaseBox):
         self._text = ""
         self.ui.set_text(self._text)
 
+    def run(self):
+        self.ui.run()
+        self.ui = None
+        # TODO: confirm this behaviour: why return text?
+        # Answer: because this is a TEXT BOX, and the return behaviour is to give
+        # you the thing-of-interest. Must be different for every box class...
+        return self._text
+
+    def stop(self):
+        self.ui.stop()
+
+    def callback_ui(self, ui, command, text):
+        """ This method is executed when ok, cancel, or x is pressed in the ui. """
+        if command == 'update':  # OK was pressed
+            self._text = text
+            if self.callback:
+                # If a callback was set, call main process
+                self.callback(self)
+            else:
+                self.stop()
+        elif command in ('x', 'cancel'):
+            self.stop()
+            self._text = None
+
+    @property
+    def msg(self):
+        """Text in msg Area"""
+        return self._msg
+
+    @msg.setter
+    def msg(self, msg):
+        self._msg = to_string(msg)
+        self.ui._set_msg_area(self._msg)
+
+    @msg.deleter
+    def msg(self):
+        self._msg = ""
+        self.ui._set_msg_area(self._msg)
 
 class GUItk(object):
 

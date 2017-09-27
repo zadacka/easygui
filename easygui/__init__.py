@@ -30,7 +30,7 @@ __all__ = ['buttonbox',
            'egdemo',
 ]
 
-from examples.demo import easygui_demo as egdemo
+from demos.demo import easygui_demo as egdemo
 # Import all functions that form the API
 from .boxes.button_box import buttonbox
 from .boxes.choice_box import choicebox
