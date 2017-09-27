@@ -168,10 +168,10 @@ def demo_buttonbox_with_image():
     choices = ["Yes", "No", "No opinion"]
 
     for image in [
-            os.path.join(package_dir, "python_and_check_logo.gif"),
-            os.path.join(package_dir, "python_and_check_logo.jpg"),
-            os.path.join(package_dir, "python_and_check_logo.png"),
-            os.path.join(package_dir, "zzzzz.gif")]:
+        os.path.join(package_dir, "python_and_check_logo.gif"),
+        os.path.join(package_dir, "python_and_check_logo.jpg"),
+        os.path.join(package_dir, "python_and_check_logo.png"),
+    ]:
         reply = buttonbox(msg + image, image=image, choices=choices)
         print("Reply was: {!r}".format(reply))
     return reply
@@ -183,7 +183,6 @@ def demo_buttonbox_with_choice():
     images.append(os.path.join(package_dir, "python_and_check_logo.gif"))
     images.append(os.path.join(package_dir, "python_and_check_logo.jpg"))
     images.append(os.path.join(package_dir, "python_and_check_logo.png"))
-    images.append(os.path.join(package_dir, "zzzzz.gif"))
     reply = buttonbox(msg, images=images, choices=['cancel'])
     print("Reply was: {!r}".format(reply))
     return reply

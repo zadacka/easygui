@@ -98,7 +98,7 @@ distutils.core.setup(
     keywords='gui linux windows graphical user interface',
     packages=['easygui', 'easygui.boxes'],
     package_data={
-        'easygui': ['python_and_check_logo.*', 'zzzzz.gif']
+        'easygui': ['python_and_check_logo.*']
     },
     classifiers=[
         'Intended Audience :: Developers',
