@@ -11,7 +11,8 @@ def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
     tb = TextBox(msg=msg, title=title, text=text, codebox=codebox, callback=callback)
     # TODO: confirm behavioural change is okay (always return tb, not sometimes tb sometimes string)
     if run:
-        tb.run()
+        text = tb.run()
+        return text
     return tb
 
 

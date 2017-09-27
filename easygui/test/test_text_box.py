@@ -23,7 +23,11 @@ TEST_ARGS = [TEST_MESSAGE, TEST_TITLE, TEST_TEXT, TEST_CODEBOX, TEST_CALLBACK]
 @patch(MODBASE + '.TextBox')
 class TestTextBoxUtilities(unittest.TestCase):
     def test_textbox(self, mock_text_box_class):
-        text_box = textbox(*TEST_ARGS, run=True)
+        mock_text_box_instance = Mock()
+        mock_text_box_instance.run = Mock(return_value='return text')
+        mock_text_box_class.return_value = mock_text_box_instance
+
+        return_text = textbox(*TEST_ARGS, run=True)
         mock_text_box_class.assert_called_once_with(
             msg=TEST_MESSAGE,
             title=TEST_TITLE,
@@ -31,7 +35,8 @@ class TestTextBoxUtilities(unittest.TestCase):
             codebox=TEST_CODEBOX,
             callback=TEST_CALLBACK
         )
-        text_box.run.assert_called_once_with()
+        mock_text_box_instance.run.assert_called_once_with()
+        self.assertEqual(return_text, 'return text')
 
 
 @patch(MODBASE + '.GUItk')
