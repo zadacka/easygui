@@ -112,11 +112,11 @@ class TestTextBox(unittest.TestCase):
         new_text = 'some new text to test setter'
         text_box.msg = new_text
         self.assertEqual(text_box._msg, new_text)
-        mock_ui.set_msg_area.assert_called_with(new_text)
+        mock_ui._set_msg_area.assert_called_with(new_text)
 
         del text_box.msg
         self.assertEqual(text_box.msg, '')
-        mock_ui.set_msg_area.assert_has_calls([call(new_text), call('')])
+        mock_ui._set_msg_area.assert_has_calls([call(new_text), call('')])
 
 
 class TestGUItk(unittest.TestCase):

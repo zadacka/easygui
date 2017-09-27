@@ -8,6 +8,8 @@ class BaseBox(object):
         self.ui.run()
         self.ui = None
         # TODO: confirm this behaviour: why return text?
+        # Answer: because this is a TEXT BOX, and the return behaviour is to give
+        # you the thing-of-interest. Must be different for every box class...
         return self._text
 
     def stop(self):
@@ -34,9 +36,9 @@ class BaseBox(object):
     @msg.setter
     def msg(self, msg):
         self._msg = to_string(msg)
-        self.ui.set_msg_area(self._msg)
+        self.ui._set_msg_area(self._msg)
 
     @msg.deleter
     def msg(self):
         self._msg = ""
-        self.ui.set_msg_area(self._msg)
+        self.ui._set_msg_area(self._msg)
