@@ -1,12 +1,12 @@
 import unittest
 
-from mock import mock, patch, Mock, call
+from mock import patch, Mock
 
-from easygui.boxes.text_box import TextBox, textbox, GUItk
+from easygui.boxes.text_box import TextBox, textbox
 
 try:
     import tkinter as tk  # python 3
-except (SystemError, ValueError, ImportError):
+except ImportError:
     import Tkinter as tk  # python 2
 
 
@@ -18,6 +18,9 @@ TEST_TEXT = 'example text'
 TEST_CODEBOX = False
 TEST_CALLBACK = Mock()
 TEST_ARGS = [TEST_MESSAGE, TEST_TITLE, TEST_TEXT, TEST_CODEBOX, TEST_CALLBACK]
+
+WAIT_0_MILLISECONDS = 0
+WAIT_1_MILLISECONDS = 1
 
 
 @patch(MODBASE + '.TextBox')
@@ -39,126 +42,123 @@ class TestTextBoxUtilities(unittest.TestCase):
         self.assertEqual(return_text, 'return text')
 
 
-@patch(MODBASE + '.GUItk')
 class TestTextBox(unittest.TestCase):
-
-    def test_instantiation(self, mock_ui_class):
-        mock_ui = mock_ui_class.return_value
-        text_box = TextBox(*TEST_ARGS)
-
-        self.assertEqual(text_box._text, TEST_TEXT)
-        self.assertEqual(text_box.text, TEST_TEXT)  # property
-        self.assertEqual(text_box._msg, TEST_MESSAGE)
-        self.assertEqual(text_box.msg, TEST_MESSAGE)  # property
-        self.assertEqual(text_box.ui, mock_ui)
-        self.assertEqual(text_box.callback, TEST_CALLBACK)
-        args = [TEST_MESSAGE, TEST_TITLE, TEST_TEXT, TEST_CODEBOX, mock.ANY]
-        mock_ui_class.assert_called_once_with(*args)
-
-    def test_run(self, mock_ui_class):
-        mock_ui = mock_ui_class.return_value
-        text_box = TextBox(*TEST_ARGS)
-
-        return_value = text_box.run()
-        self.assertEqual(return_value, TEST_TEXT)
-        mock_ui.run.assert_called_once_with()
-        self.assertEqual(text_box.ui, None)
-
-    def test_stop(self, mock_ui_class):
-        mock_ui = mock_ui_class.return_value
-        text_box = TextBox(*TEST_ARGS)
-        text_box.stop()
-        mock_ui.stop.assert_called_once_with()
-
-    def test_callback_ui(self, mock_ui_class):
-        text_box = TextBox(*TEST_ARGS)
-        mock_ui = mock_ui_class.return_value
-
-        text_box.callback_ui(ui=None, command='not update, x, or cancel', text='anything')
-        self.assertEqual(text_box._text, TEST_TEXT)
-        mock_ui.stop.assert_not_called()
-
-        new_text = 'new text'
-        text_box.callback_ui(ui=None, command='update', text=new_text)
-        self.assertEqual(text_box._text, new_text)
-        TEST_CALLBACK.assert_has_calls([call(text_box)])  # TODO: find why called twice
-
-        text_box.callback_ui(ui=None, command='x', text='anything')
-        self.assertEqual(text_box._text, None)
-        mock_ui.stop.assert_called_once_with()
-
-        text_box.callback_ui(ui=None, command='cancel', text='anything')
-        self.assertEqual(text_box._text, None)
-        mock_ui.stop.assert_has_calls([call(), call()])
-
-    def test_text_property(self, mock_ui_class):
-        text_box = TextBox(*TEST_ARGS)
-        mock_ui = mock_ui_class.return_value
-
-        text_from_getter = text_box.text
-        self.assertEqual(text_from_getter, TEST_TEXT)
-
-        new_text = 'some new text to test setter'
-        text_box.text = new_text
-        self.assertEqual(text_box._text, new_text)
-        mock_ui.set_text.assert_called_with(new_text)
-
-        del text_box.text
-        self.assertEqual(text_box.text, '')
-        mock_ui.set_text.assert_has_calls([call(new_text), call('')])
-
-    def test_msg_property(self, mock_ui_class):
-        text_box = TextBox(*TEST_ARGS)
-        mock_ui = mock_ui_class.return_value
-
-        msg_from_getter = text_box.msg
-        self.assertEqual(msg_from_getter, TEST_MESSAGE)
-
-        new_text = 'some new text to test setter'
-        text_box.msg = new_text
-        self.assertEqual(text_box._msg, new_text)
-        mock_ui._set_msg_area.assert_called_with(new_text)
-
-        del text_box.msg
-        self.assertEqual(text_box.msg, '')
-        mock_ui._set_msg_area.assert_has_calls([call(new_text), call('')])
-
-
-class TestGUItk(unittest.TestCase):
     def setUp(self):
-        self.ui = GUItk(msg=TEST_MESSAGE, title=TEST_TITLE, text=TEST_TEXT, code_box=TEST_CODEBOX, callback=TEST_CALLBACK)
+        self.tb = TextBox(*TEST_ARGS)
 
     def test_instantiation(self):
-        isinstance(self.ui.box_root, tk.Tk)
-        isinstance(self.ui.message_area, tk.Text)
-        isinstance(self.ui.text_area, tk.Text)
+        # Instance attributes should be configured:
+        self.assertEqual(self.tb.text, TEST_TEXT)
+        self.assertEqual(self.tb.msg, TEST_MESSAGE)
+        self.assertEqual(self.tb._user_specified_callback, TEST_CALLBACK)
 
-        self.assertEqual(self.ui.callback, TEST_CALLBACK)
-        self.assertEqual(self.ui.message_area.get(0.0, 'end-1c'), TEST_MESSAGE)
-        self.assertEqual(self.ui.text_area.get(0.0, 'end-1c'), TEST_TEXT)
-        # title has been passed to windowing system
+        # The following Tk widgets should also have been created:
+        isinstance(self.tb.box_root, tk.Tk)
+        isinstance(self.tb.message_area, tk.Tk)
+        isinstance(self.tb.text_area, tk.Tk)
+
+        # And configured:
+        self.assertEqual(self.tb.message_area.get(0.0, 'end-1c'), TEST_MESSAGE)
+        self.assertEqual(self.tb.text_area.get(0.0, 'end-1c'), TEST_TEXT)
 
     def test_run(self):
-        self.ui.box_root = Mock()
-        self.ui.run()
-        self.ui.box_root.mainloop.assert_called_once_with()
-        self.ui.box_root.destroy.assert_called_once_with()
+        self.tb.box_root = Mock()
+        return_value = self.tb.run()
+        self.assertEqual(return_value, TEST_TEXT)
+        self.tb.box_root.mainloop.assert_called_once_with()
+        self.tb.box_root.destroy.assert_called_once_with()
 
     def test_stop(self):
-        self.ui.box_root = Mock()
-        self.ui.stop()
-        self.ui.box_root.quit.assert_called_once_with()
+        self.tb.box_root = Mock()
+        self.tb.stop()
+        self.tb.box_root.quit.assert_called_once_with()
 
     def test_set_msg_area(self):
-        new_text = 'some new text'
-        self.ui.set_msg_area(msg=new_text)
-        self.assertEqual(self.ui.message_area.get(1.0, 'end-1c'), new_text)
+        new_msg = 'some new text'
+        self.tb._set_msg_area(msg=new_msg)
+        self.assertEqual(self.tb.message_area.get(1.0, 'end-1c'), new_msg)
 
     def test_get_text(self):
-        actual = self.ui.get_text()
+        actual = self.tb._get_text()
         self.assertEqual(actual, TEST_TEXT)
 
     def test_set_text(self):
         new_text = 'some new text'
-        self.ui.set_text(new_text)
-        self.assertEqual(self.ui.text_area.get(1.0, 'end-1c'), new_text)
+        self.tb._set_text(new_text)
+        self.assertEqual(self.tb.text_area.get(1.0, 'end-1c'), new_text)
+
+
+class TestTextBoxIntegration(unittest.TestCase):
+
+    def test_textbox_x_results_in_run_returning_None(self):
+        tb = textbox(*TEST_ARGS, run=False)
+
+        def simulate_user_x_press(tb_instance):
+            tb_instance.x_pressed('ignored button handler arg')
+
+        tb.box_root.after(WAIT_0_MILLISECONDS, simulate_user_x_press, tb)
+        actual = tb.run()
+        self.assertEqual(actual, None)
+
+    def test_textbox_cancel_button_pressed_results_in_run_returning_None(self):
+        tb = textbox(*TEST_ARGS, run=False)
+
+        def simulate_cancel_button_pressed(tb_instance):
+            tb_instance.cancel_button_pressed('ignored button handler arg')
+
+        tb.box_root.after(WAIT_0_MILLISECONDS, simulate_cancel_button_pressed, tb)
+        actual = tb.run()
+
+        self.assertEqual(actual, None)
+
+    def test_textbox_ok_pressed_calls_user_defined_callback(self):
+        tb = textbox(*TEST_ARGS, run=False)
+
+        def simulate_ok_button_pressed(tb_instance):
+            tb_instance.ok_button_pressed('ignored button handler arg')
+
+        def stop_running(tb_instance):
+            tb_instance.stop()
+
+        tb.box_root.after(WAIT_0_MILLISECONDS, simulate_ok_button_pressed, tb)
+        tb.box_root.after(WAIT_1_MILLISECONDS, stop_running, tb)
+        actual = tb.run()
+
+        TEST_CALLBACK.assert_called_once_with()
+        self.assertEqual(actual, TEST_TEXT)
+
+    def test_textbox_ok_pressed_with_no_user_defined_callback(self):
+        tb = textbox(
+            msg=TEST_MESSAGE,
+            title=TEST_TITLE,
+            text=TEST_TEXT,
+            codebox=TEST_CODEBOX,
+            callback=None,
+            run=False
+        )
+
+        def simulate_ok_button_pressed(tb_instance):
+            tb_instance.ok_button_pressed('ignored button handler arg')
+
+        tb.box_root.after(WAIT_0_MILLISECONDS, simulate_ok_button_pressed, tb)
+        actual = tb.run()
+
+        # tb.stop() happens because no user callback is set
+        # the initial text value is unchanged, and is returned from run()
+        self.assertEqual(actual, TEST_TEXT)
+
+
+class TestTextBoxCodeBox(unittest.TestCase):
+
+    def test_instantiation_codebox(self):
+        tb = textbox(
+            msg=TEST_MESSAGE,
+            title=TEST_TITLE,
+            text=TEST_TEXT * 100,
+            codebox=True,
+            callback=None,
+            run=False
+        )
+
+        # cget returns strings so the monospace assertion is a bit messy:
+        self.assertEqual(tb.text_area.cget('font'), str(tb.MONOSPACE_FONT))

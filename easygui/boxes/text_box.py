@@ -1,9 +1,16 @@
 try:
     import tkinter as tk  # python 3
+    import tkinter.font as font
 except ImportError:
     import Tkinter as tk  # python 2
+    import tkFont as font
 
-from easygui.boxes import to_string, GLOBAL_WINDOW_POSITION, get_width_and_padding
+from easygui.boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding
+
+
+def get_num_lines(message_area):
+    num_lines, _ = message_area.index(tk.END).split('.')
+    return num_lines
 
 
 def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
@@ -17,12 +24,9 @@ def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
 
 
 class TextBox(object):
-    """ Display a message and a editable text field pre-populated with 'text'.
-        Separate user from UI implementation and make agnostic to underlying library (TK)
-            so that other libraries (WX, QT) could be used without negative user impact.
-     """
+    """ Display a message and a editable text field pre-populated with 'text' """
 
-    def __init__(self, msg, title, text, codebox, callback=lambda *args, **kwargs: True):
+    def __init__(self, msg, title, text, codebox, callback):
         """
         :param msg: str displayed in the message area (instructions...)
         :param title: str used as the window title
@@ -30,77 +34,20 @@ class TextBox(object):
         :param codebox: bool (if true) don't wrap and width set to 80 chars
         :param callback: optional function to be called when OK is pressed
         """
-        self.callback = callback
-        self.ui = GUItk(msg, title, text, codebox, self.callback_ui)
-        self._text = text
-        self._msg = msg
+        self._user_specified_callback = callback
+        self.text = text
+        self.msg = msg
 
-    @property
-    def text(self):
-        """Text in text Area"""
-        return self._text
-
-    @text.setter
-    def text(self, text):
-        self._text = to_string(text)
-        self.ui.set_text(self._text)
-
-    @text.deleter
-    def text(self):
-        self._text = ""
-        self.ui.set_text(self._text)
-
-    def run(self):
-        self.ui.run()
-        self.ui = None
-        # TODO: confirm this behaviour: why return text?
-        # Answer: because this is a TEXT BOX, and the return behaviour is to give
-        # you the thing-of-interest. Must be different for every box class...
-        return self._text
-
-    def stop(self):
-        self.ui.stop()
-
-    def callback_ui(self, ui, command, text):
-        """ This method is executed when ok, cancel, or x is pressed in the ui. """
-        if command == 'update':  # OK was pressed
-            self._text = text
-            if self.callback:
-                # If a callback was set, call main process
-                self.callback(self)
-            else:
-                self.stop()
-        elif command in ('x', 'cancel'):
-            self.stop()
-            self._text = None
-
-    @property
-    def msg(self):
-        """Text in msg Area"""
-        return self._msg
-
-    @msg.setter
-    def msg(self, msg):
-        self._msg = to_string(msg)
-        self.ui._set_msg_area(self._msg)
-
-    @msg.deleter
-    def msg(self):
-        self._msg = ""
-        self.ui._set_msg_area(self._msg)
-
-class GUItk(object):
-
-    def __init__(self, msg, title, text, code_box, callback):
-        self.callback = callback
         self.box_root = self._configure_box_root(title)
-        self.message_area = self._configure_message_area(box_root=self.box_root, code_box=code_box)
-        self.set_msg_area("" if msg is None else msg)
+        self.message_area = self._configure_message_area(box_root=self.box_root, code_box=codebox)
+        self._set_msg_area("" if msg is None else msg)
 
-        self.text_area = self._configure_text_area(box_root=self.box_root, code_box=code_box)
+        self.MONOSPACE_FONT = font.Font(family='Courier')
+        self.text_area = self._configure_text_area(box_root=self.box_root, code_box=codebox)
         self._configure_buttons()
 
-        self.set_text(text)
+        self._set_text(text)
+
 
     def _configure_box_root(self, title):
         box_root = tk.Tk()
@@ -126,8 +73,7 @@ class GUItk(object):
         message_area.pack(side=tk.TOP, expand=1, fill='both')
         return message_area
 
-    @staticmethod
-    def _configure_text_area(box_root, code_box):
+    def _configure_text_area(self, box_root, code_box):
         padding, width_in_chars = get_width_and_padding(code_box)
 
         text_frame = tk.Frame(box_root, padx=padding, )
@@ -143,8 +89,10 @@ class GUItk(object):
         text_area.configure(xscrollcommand=horizontal_scrollbar.set)
 
         if code_box:
+            text_area.configure(font=self.MONOSPACE_FONT)
             # no word-wrapping for code so we need a horizontal scroll bar
             horizontal_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+
         vertical_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # pack textArea last so bottom scrollbar displays properly
@@ -161,16 +109,17 @@ class GUItk(object):
 
         return text_area
 
-    def set_msg_area(self, msg):
+    def _set_msg_area(self, msg):
         self.message_area.delete(1.0, tk.END)
         self.message_area.insert(tk.END, msg)
-        num_lines, _ = self.message_area.index(tk.END).split('.')
+        num_lines = get_num_lines(message_area=self.message_area)
         self.message_area.configure(height=int(num_lines))
         self.message_area.update()
 
     def run(self):
         self.box_root.mainloop()
         self.box_root.destroy()
+        return self.text
 
     def stop(self):
         self.box_root.quit()
@@ -190,26 +139,32 @@ class GUItk(object):
         ok_button.bind("<Return>", self.ok_button_pressed)
         ok_button.bind("<Button-1>", self.ok_button_pressed)
 
-    def get_text(self):
+    def _get_text(self):
         return self.text_area.get(1.0, 'end-1c')
 
-    def set_text(self, text):
+    def _set_text(self, text):
         self.text_area.delete(1.0, tk.END)
         self.text_area.insert(tk.END, text, "normal")
         self.text_area.focus()
 
-    def handle_callback(self, command):
-        self.callback(command=command, text=self.get_text())
-
     # Methods executing when a key is pressed
     def x_pressed(self, _):
-        self.handle_callback(command='x')
+        self.callback(command='x')
 
     def cancel_button_pressed(self, _):
-        self.callback(self, command='cancel')
+        self.callback(command='cancel')
 
     def ok_button_pressed(self, _):
-        self.callback(self, command='update', text=self.get_text())
+        self.callback(command='update')
 
-if __name__ == '__main__':
-    tb = textbox(msg='example msg', title='example title', text='example text', codebox=False, callback=None, run=True)
+    def callback(self, command):
+        if command == 'update':  # OK was pressed
+            self.text = self._get_text()
+            if self._user_specified_callback:
+                # If a callback was set, call main process
+                self._user_specified_callback()
+            else:
+                self.stop()
+        elif command in ('x', 'cancel'):
+            self.stop()
+            self.text = None
