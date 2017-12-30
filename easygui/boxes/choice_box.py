@@ -32,7 +32,7 @@ def choicebox(msg="Pick an item", title="", choices=[], preselect=[], callback=N
         return cb
 
 
-def multchoicebox(msg="Pick an item", title="", choices=[], preselect=0, callback=None, run=True):
+def multchoicebox(msg="Pick an item", title="", choices=[], preselect=[], callback=None, run=True):
     """ Same as choicebox, but the user can select many items. """
     mcb = ChoiceBox(msg, title, choices, preselect=preselect, multiple_select=True, callback=callback)
     if run:
@@ -48,7 +48,7 @@ class ChoiceBox(object):
 
         self.callback = callback
 
-        self.choices = self.to_list_of_str(choices)
+        self.choices = [str(c) for c in choices]
 
         if not multiple_select and len(preselect)>1:
             raise ValueError("Multiple selections not allowed, yet preselect has multiple values:{}".format(preselect))
@@ -98,25 +98,6 @@ class ChoiceBox(object):
     def msg(self):
         self._msg = ""
         self.ui.set_msg(self._msg)
-
-    # Methods to validate what will be sent to ui ---------
-
-    def to_list_of_str(self, choices):
-        # -------------------------------------------------------------------
-        # If choices is a tuple, we make it a list so we can sort it.
-        # If choices is already a list, we make a new list, so that when
-        # we sort the choices, we don't affect the list object that we
-        # were given.
-        # -------------------------------------------------------------------
-        choices = list(choices)
-
-        choices = [str(c) for c in choices]
-
-        while len(choices) < 2:
-            choices.append("Add more choices")
-
-        return choices
-
                 
 
 class GUItk(object):
