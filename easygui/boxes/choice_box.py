@@ -6,14 +6,12 @@ import easygui.boxes
 try:
     import tkinter as tk  # python 3
     import tkinter.font as tk_Font
-except:
+except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as tk_Font
 
 
-def choicebox(msg="Pick an item", title="", choices=[], preselect=0,
-              callback=None,
-              run=True):
+def choicebox(msg="Pick an item", title="", choices=[], preselect=0, callback=None, run=True):
     """
     Present the user with a list of choices.
     return the choice that he selects.
@@ -22,32 +20,26 @@ def choicebox(msg="Pick an item", title="", choices=[], preselect=0,
     :param str title: the window title
     :param list choices: a list or tuple of the choices to be displayed
     :param preselect: Which item, if any are preselected when dialog appears
+    :param callback:
+    :param run:
     :return: List containing choice selected or None if cancelled
     """
-    mb = ChoiceBox(msg, title, choices, preselect=preselect,
-                   multiple_select=False,
-                   callback=callback)
+    cb = ChoiceBox(msg, title, choices, preselect=preselect, multiple_select=False, callback=callback)
     if run:
-        reply = mb.run()
+        reply = cb.run()
         return reply
     else:
-        return mb
+        return cb
 
 
-def multchoicebox(msg="Pick an item", title="", choices=[],
-                  preselect=0, callback=None,
-                  run=True):
-    """ Same as choicebox, but the user can select many items.
-
-    """
-    mb = ChoiceBox(msg, title, choices, preselect=preselect,
-                   multiple_select=True,
-                   callback=callback)
+def multchoicebox(msg="Pick an item", title="", choices=[], preselect=0, callback=None, run=True):
+    """ Same as choicebox, but the user can select many items. """
+    mcb = ChoiceBox(msg, title, choices, preselect=preselect, multiple_select=True, callback=callback)
     if run:
-        reply = mb.run()
+        reply = mcb.run()
         return reply
     else:
-        return mb
+        return mcb
 
 
 # Utility function.  But, is it generic enough to be moved out of here?
@@ -395,7 +387,7 @@ class GUItk(object):
         # put the buttons in the self.buttonsFrame
         okButton = tk.Button(self.buttonsFrame, takefocus=tk.YES,
                              text="OK", height=1, width=6)
-        bindArrows(okButton)
+        easygui.boxes.bindArrows(okButton)
         okButton.pack(expand=tk.NO, side=tk.RIGHT, padx='2m', pady='1m',
                       ipady="1m", ipadx="2m")
 
@@ -407,7 +399,7 @@ class GUItk(object):
     def create_cancel_button(self):
         cancelButton = tk.Button(self.buttonsFrame, takefocus=tk.YES,
                                  text="Cancel", height=1, width=6)
-        bindArrows(cancelButton)
+        easygui.boxes.bindArrows(cancelButton)
         cancelButton.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m',
                           ipady="1m", ipadx="2m")
         cancelButton.bind("<Return>", self.cancel_pressed)
@@ -434,9 +426,9 @@ class GUItk(object):
                             ipady="1m", ipadx="2m")
 
         selectAllButton.bind("<Button-1>", self.choiceboxSelectAll)
-        bindArrows(selectAllButton)
+        easygui.boxes.bindArrows(selectAllButton)
         clearAllButton.bind("<Button-1>", self.choiceboxClearAll)
-        bindArrows(clearAllButton)
+        easygui.boxes.bindArrows(clearAllButton)
 
     def KeyboardListener(self, event):
         key = event.keysym

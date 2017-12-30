@@ -25,7 +25,7 @@ WAIT_1_MILLISECONDS = 1
 
 @patch(MODBASE + '.TextBox')
 class TestTextBoxUtilities(unittest.TestCase):
-    def test_textbox(self, mock_text_box_class):
+    def test_textbox_method_instantiates_textbox_class_and_runs_it(self, mock_text_box_class):
         mock_text_box_instance = Mock()
         mock_text_box_instance.run = Mock(return_value='return text')
         mock_text_box_class.return_value = mock_text_box_instance
