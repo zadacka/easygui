@@ -24,14 +24,14 @@ def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
 
 
 class TextBox(object):
-    """ Display a message and a editable text field pre-populated with 'text' """
+    """ Display a message, and an editable text field pre-populated with 'text' """
 
     def __init__(self, msg, title, text, codebox, callback):
         """
         :param msg: str displayed in the message area (instructions...)
         :param title: str used as the window title
         :param text: str displayed in textArea (editable)
-        :param codebox: bool (if true) don't wrap and width set to 80 chars
+        :param codebox: bool (if true) don't wrap, set width to 80 chars, use monospace font
         :param callback: optional function to be called when OK is pressed
         """
         self._user_specified_callback = callback
@@ -47,7 +47,6 @@ class TextBox(object):
         self._configure_buttons()
 
         self._set_text(text)
-
 
     def _configure_box_root(self, title):
         box_root = tk.Tk()
