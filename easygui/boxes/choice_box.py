@@ -11,7 +11,7 @@ except ImportError:
     import tkFont as tk_Font
 
 
-def choicebox(msg="Pick an item", title="", choices=[], preselect=0, callback=None, run=True):
+def choicebox(msg="Pick an item", title="", choices=[], preselect=[], callback=None, run=True):
     """
     Present the user with a list of choices.
     return the choice that he selects.
@@ -19,7 +19,7 @@ def choicebox(msg="Pick an item", title="", choices=[], preselect=0, callback=No
     :param str msg: the msg to be displayed
     :param str title: the window title
     :param list choices: a list or tuple of the choices to be displayed
-    :param preselect: Which item, if any are preselected when dialog appears
+    :param preselect: optional list of pre-selected choices, a subset of the choices argument
     :param callback:
     :param run:
     :return: List containing choice selected or None if cancelled
@@ -42,36 +42,6 @@ def multchoicebox(msg="Pick an item", title="", choices=[], preselect=0, callbac
         return mcb
 
 
-# Utility function.  But, is it generic enough to be moved out of here?
-def make_list_or_none(obj, cast_type=None):
-    # -------------------------------------------------------------------
-    # for an object passed in, put it in standardized form.
-    # It may be None.  Just return None
-    # If it is a scalar, attempt to cast it into cast_type.  Raise error
-    # if not possible.  Convert scalar to a single-element list.
-    # If it is a collections.Sequence (including a scalar converted to let),
-    # then cast each element to cast_type.  Raise error if any cannot be converted. 
-    # -------------------------------------------------------------------
-    ret_val = obj
-    if ret_val is None:
-        return None
-    # Convert any non-sequence to single-element list
-    if not isinstance(obj, collections.Sequence):
-        if cast_type is not None:
-            try:
-                ret_val = cast_type(obj)
-            except Exception as e:
-                raise Exception("Value {} cannot be converted to type: {}".format(obj, cast_type))
-        ret_val = [ret_val,]
-    # Convert all elements to cast_type
-    if cast_type is not None:
-        try:
-            ret_val = [cast_type(elem) for elem in ret_val]
-        except:
-            raise Exception("Not all values in {}\n can be converted to type: {}".format(ret_val, cast_type))
-    return ret_val
-                        
-                        
 class ChoiceBox(object):
 
     def __init__(self, msg, title, choices, preselect, multiple_select, callback):
@@ -80,12 +50,10 @@ class ChoiceBox(object):
 
         self.choices = self.to_list_of_str(choices)
 
-        # Convert preselect to always be a list or None.
-        preselect_list = make_list_or_none(preselect, cast_type=int)
-        if not multiple_select and len(preselect_list)>1:
-            raise ValueError("Multiple selections not allowed, yet preselect has multiple values:{}".format(preselect_list))
+        if not multiple_select and len(preselect)>1:
+            raise ValueError("Multiple selections not allowed, yet preselect has multiple values:{}".format(preselect))
         
-        self.ui = GUItk(msg, title, self.choices, preselect_list, multiple_select,
+        self.ui = GUItk(msg, title, self.choices, preselect, multiple_select,
                         self.callback_ui)
 
     def run(self):
