@@ -1,4 +1,7 @@
-import Tkinter as tk
+try:
+    import tkinter as tk  # python 3
+except ImportError:
+    import Tkinter as tk  # python 2
 
 
 def to_string(something):
