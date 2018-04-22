@@ -143,7 +143,7 @@ class TestTextBoxIntegration(unittest.TestCase):
         tb.box_root.after(WAIT_0_MILLISECONDS, simulate_ok_button_pressed, tb)
         actual = tb.run()
 
-        # tb.stop() happens because no user callback is set
+        # tb.stop() happens because no user _user_specified_callback is set
         # the initial text value is unchanged, and is returned from run()
         self.assertEqual(actual, TEST_TEXT)
 

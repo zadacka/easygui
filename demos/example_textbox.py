@@ -42,9 +42,9 @@ class Demo2(object):
     def __init__(self):
         """ Set and run the program """
 
-        title = "Demo of textbox: Classic box with callback"
+        title = "Demo of textbox: Classic box with _user_specified_callback"
 
-        gnexp = ("This is a demo of the textbox with a callback, "
+        gnexp = ("This is a demo of the textbox with a _user_specified_callback, "
                  "it doesn't flicker!.\n\n")
 
         msg = "INSERT A TEXT WITH FIVE OR MORE A\'s"
@@ -90,10 +90,10 @@ class Demo3(object):
 
         self.finished = False
 
-        title = "Demo of textbox: Object with callback"
+        title = "Demo of textbox: Object with _user_specified_callback"
 
         msg = ("This is a demo of the textbox set as "
-               "an object with a callback, "
+               "an object with a _user_specified_callback, "
                "you can configure it and when you are finished, "
                "you run it.\n\nThere is a typo in it. Find and correct it.")
 

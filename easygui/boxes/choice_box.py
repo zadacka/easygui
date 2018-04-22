@@ -1,7 +1,7 @@
-import collections
 import string
 
 import easygui.boxes
+from easygui.boxes import get_width_and_padding, get_num_lines
 
 try:
     import tkinter as tk  # python 3
@@ -46,164 +46,57 @@ class ChoiceBox(object):
 
     def __init__(self, msg, title, choices, preselect, multiple_select, callback):
 
-        self.callback = callback
-
-        self.choices = [str(c) for c in choices]
-
         if not multiple_select and len(preselect)>1:
             raise ValueError("Multiple selections not allowed, yet preselect has multiple values:{}".format(preselect))
-        
-        self.ui = GUItk(msg, title, self.choices, preselect, multiple_select,
-                        self.callback_ui)
+
+        self._multiple_select = multiple_select
+        self._user_specified_callback = callback
+        self.choices = [str(c) for c in choices]
+
+        self.box_root = self._configure_box_root(title)
+
+        self.message_area = self._configure_message_area(self.box_root)
+        self._set_msg_area("" if msg is None else msg)
+
+        self.create_choice_area()
+
+        self.create_ok_button()
+        self.create_cancel_button()
+        self.create_special_buttons()
+        self.preselect_choice(preselect)
+        self.choiceboxWidget.focus_force()
 
     def run(self):
-        """ Start the ui """
-        self.ui.run()
-        self.ui = None
+        self.box_root.mainloop()  # run it!
+        self.box_root.destroy()   # close the window
         return self.choices
 
     def stop(self):
-        """ Stop the ui """
-        self.ui.stop()
-
-    def callback_ui(self, ui, command, choices):
-        """ This method is executed when ok, cancel, or x is pressed in the ui.
-        """
-        if command == 'update':  # OK was pressed
-            self.choices = choices
-            if self.callback:
-                # If a callback was set, call main process
-                self.callback(self)
-            else:
-                self.stop()
-        elif command == 'x':
-            self.stop()
-            self.choices = None
-        elif command == 'cancel':
-            self.stop()
-            self.choices = None
-
-    # methods to change properties --------------
-
-    @property
-    def msg(self):
-        """Text in msg Area"""
-        return self._msg
-
-    @msg.setter
-    def msg(self, msg):
-        self.ui.set_msg(msg)
-
-    @msg.deleter
-    def msg(self):
-        self._msg = ""
-        self.ui.set_msg(self._msg)
-                
-
-class GUItk(object):
-
-    """ This object contains the tk root object.
-        It draws the window, waits for events and communicates them
-        to MultiBox, together with the entered values.
-
-        The position in wich it is drawn comes from a global variable.
-
-        It also accepts commands from Multibox to change its message.
-    """
-
-    def __init__(self, msg, title, choices, preselect, multiple_select, callback):
-
-        self.callback = callback
-
-        self.choices = choices
-
-        self.width_in_chars = easygui.boxes.PROP_FONT_LINE_LENGTH
-        # Initialize self.selected_choices
-        # This is the value that will be returned if the user clicks the close
-        # icon
-        # self.selected_choices = None
-
-        self.multiple_select = multiple_select
-
-        self.boxRoot = tk.Tk()
-
-        self.boxFont = tk_Font.nametofont("TkTextFont")
-
-        self.config_root(title)
-
-        self.set_pos(easygui.boxes.GLOBAL_WINDOW_POSITION)  # GLOBAL POSITION
-
-        self.create_msg_widget(msg)
-
-        self.create_choicearea()
-
-        self.create_ok_button()
-
-        self.create_cancel_button()
-
-        self. create_special_buttons()
-        
-        self.preselect_choice(preselect)
-
-        self.choiceboxWidget.focus_force()
-
-    # Run and stop methods ---------------------------------------
-
-    def run(self):
-        self.boxRoot.mainloop()  # run it!
-        self.boxRoot.destroy()   # Close the window
-
-    def stop(self):
-        # Get the current position before quitting
-        self.get_pos()
-
-        self.boxRoot.quit()
+        self.box_root.quit()
 
     def x_pressed(self):
-        self.callback(self, command='x', choices=self.get_choices())
+        self.stop()
+        self.choices = None
 
-    def cancel_pressed(self, event):
-        self.callback(self, command='cancel', choices=self.get_choices())
+    def cancel_button_pressed(self, event):
+        self.stop()
+        self.choices = None
 
-    def ok_pressed(self, event):
-        self.callback(self, command='update', choices=self.get_choices())
+    def ok_button_pressed(self, event):
+        self.choices = self.get_choices()
+        if self._user_specified_callback:
+            # If a _user_specified_callback was set, call main process
+            self._user_specified_callback(self)
+        else:
+            self.stop()
 
-    # Methods to change content ---------------------------------------
-
-    # Methods to change content ---------------------------------------
-
-    def set_msg(self, msg):
-        self.messageArea.config(state=tk.NORMAL)
-        self.messageArea.delete(1.0, tk.END)
-        self.messageArea.insert(tk.END, msg)
-        self.messageArea.config(state=tk.DISABLED)
-        # Adjust msg height
-        self.messageArea.update()
-        numlines = self.get_num_lines(self.messageArea)
-        self.set_msg_height(numlines)
-        self.messageArea.update()
-        # put the focus on the entryWidget
-
-    def set_msg_height(self, numlines):
-        self.messageArea.configure(height=numlines)
-
-    def get_num_lines(self, widget):
-        end_position = widget.index(tk.END)  # '4.0'
-        end_line = end_position.split('.')[0]  # 4
-        return int(end_line) + 1  # 5
-
-    def set_pos(self, pos=None):
-        if not pos:
-            pos = easygui.boxes.GLOBAL_WINDOW_POSITION
-        self.boxRoot.geometry(pos)
-
-    def get_pos(self):
-        # The geometry() method sets a size for the window and positions it on
-        # the screen. The first two parameters are width and height of
-        # the window. The last two parameters are x and y screen coordinates.
-        # geometry("250x150+300+300")
-        geom = self.boxRoot.geometry()  # "628x672+300+200"
-        easygui.boxes.GLOBAL_WINDOW_POSITION = '+' + geom.split('+', 1)[1]
+    def _set_msg_area(self, msg):
+        self.message_area.config(state=tk.NORMAL)  # necessary but I don't know why
+        self.message_area.delete(1.0, tk.END)
+        self.message_area.insert(tk.END, msg)
+        numlines = get_num_lines(self.message_area)
+        self.message_area.configure(height=numlines)
+        self.message_area.update()
 
     def preselect_choice(self, preselect):
         print(preselect)
@@ -216,7 +109,7 @@ class GUItk(object):
         choices_index = self.choiceboxWidget.curselection()
         if not choices_index:
             return None
-        if self.multiple_select:
+        if self._multiple_select:
             selected_choices = [self.choiceboxWidget.get(index)
                                 for index in choices_index]
         else:
@@ -224,61 +117,36 @@ class GUItk(object):
 
         return selected_choices
 
-    # Auxiliary methods -----------------------------------------------
-    def calc_character_width(self):
-        char_width = self.boxFont.measure('W')
-        return char_width
+    def _configure_box_root(self, title):
+        box_root = tk.Tk()
+        box_root.title(title)
+        box_root.iconname('Dialog')
+        box_root.protocol('WM_DELETE_WINDOW', self.x_pressed)
+        box_root.bind('<Any-Key>', self.KeyboardListener)
+        box_root.bind("<Escape>", self.cancel_button_pressed)
+        return box_root
 
-    def config_root(self, title):
+    @staticmethod
+    def _configure_message_area(box_root):
+        padding, width_in_chars = get_width_and_padding(monospace=False)
 
-        screen_width = self.boxRoot.winfo_screenwidth()
-        screen_height = self.boxRoot.winfo_screenheight()
-        self.root_width = int((screen_width * 0.8))
-        root_height = int((screen_height * 0.5))
+        message_frame = tk.Frame(box_root, padx=padding)
+        message_frame.pack(side=tk.TOP, expand=1, fill='both')
 
-        self.boxRoot.title(title)
-        self.boxRoot.iconname('Dialog')
-        self.boxRoot.expand = tk.NO
-        # self.boxRoot.minsize(width=62 * self.calc_character_width())
+        message_area = tk.Text(master=message_frame,
+                               width=width_in_chars,
+                               state=tk.DISABLED,
+                               background=box_root.config()["background"][-1],
+                               relief='flat',
+                               padx=padding,
+                               pady=padding,
+                               wrap=tk.WORD)
+        message_area.pack(side=tk.TOP, expand=1, fill='both')
+        return message_area
 
-        self.set_pos()
+    def create_choice_area(self):
 
-        self.boxRoot.protocol('WM_DELETE_WINDOW', self.x_pressed)
-        self.boxRoot.bind('<Any-Key>', self.KeyboardListener)
-        self.boxRoot.bind("<Escape>", self.cancel_pressed)
-
-    def create_msg_widget(self, msg):
-
-        if msg is None:
-            msg = ""
-
-        self.msgFrame = tk.Frame(
-            self.boxRoot,
-            padx=2 * self.calc_character_width(),
-
-        )
-        self.messageArea = tk.Text(
-            self.msgFrame,
-            width=self.width_in_chars,
-            state=tk.DISABLED,
-            background=self.boxRoot.config()["background"][-1],
-            relief='flat',
-            padx=(easygui.boxes.DEFAULT_PADDING *
-                  self.calc_character_width()),
-            pady=(easygui.boxes.DEFAULT_PADDING *
-                  self.calc_character_width()),
-            wrap=tk.WORD,
-
-        )
-        self.set_msg(msg)
-
-        self.msgFrame.pack(side=tk.TOP, expand=1, fill='both')
-
-        self.messageArea.pack(side=tk.TOP, expand=1, fill='both')
-
-    def create_choicearea(self):
-
-        self.choiceboxFrame = tk.Frame(master=self.boxRoot)
+        self.choiceboxFrame = tk.Frame(master=self.box_root)
         self.choiceboxFrame.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
 
         lines_to_show = min(len(self.choices), 20)
@@ -290,7 +158,7 @@ class GUItk(object):
                                           bg="white"
                                           )
 
-        if self.multiple_select:
+        if self._multiple_select:
             self.choiceboxWidget.configure(selectmode=tk.MULTIPLE)
 
         # self.choiceboxWidget.configure(font=(global_state.PROPORTIONAL_FONT_FAMILY,
@@ -324,13 +192,13 @@ class GUItk(object):
             self.choiceboxWidget.insert(tk.END, choice)
 
         # Bind the keyboard events
-        self.choiceboxWidget.bind("<Return>", self.ok_pressed)
+        self.choiceboxWidget.bind("<Return>", self.ok_button_pressed)
         self.choiceboxWidget.bind("<Double-Button-1>",
-                                  self.ok_pressed)
+                                  self.ok_button_pressed)
 
     def create_ok_button(self):
 
-        self.buttonsFrame = tk.Frame(self.boxRoot)
+        self.buttonsFrame = tk.Frame(self.box_root)
         self.buttonsFrame.pack(side=tk.TOP, expand=tk.YES, pady=0)
 
         # put the buttons in the self.buttonsFrame
@@ -341,9 +209,9 @@ class GUItk(object):
                       ipady="1m", ipadx="2m")
 
         # for the commandButton, bind activation events
-        okButton.bind("<Return>", self.ok_pressed)
-        okButton.bind("<Button-1>", self.ok_pressed)
-        okButton.bind("<space>", self.ok_pressed)
+        okButton.bind("<Return>", self.ok_button_pressed)
+        okButton.bind("<Button-1>", self.ok_button_pressed)
+        okButton.bind("<space>", self.ok_button_pressed)
 
     def create_cancel_button(self):
         cancelButton = tk.Button(self.buttonsFrame, takefocus=tk.YES,
@@ -351,15 +219,15 @@ class GUItk(object):
         easygui.boxes.bindArrows(cancelButton)
         cancelButton.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m',
                           ipady="1m", ipadx="2m")
-        cancelButton.bind("<Return>", self.cancel_pressed)
-        cancelButton.bind("<Button-1>", self.cancel_pressed)
+        cancelButton.bind("<Return>", self.cancel_button_pressed)
+        cancelButton.bind("<Button-1>", self.cancel_button_pressed)
         # self.cancelButton.bind("<Escape>", self.cancel_pressed)
         # for the commandButton, bind activation events to the activation event
         # handler
 
     def create_special_buttons(self):
         # add special buttons for multiple select features
-        if not self.multiple_select:
+        if not self._multiple_select:
             return
 
         selectAllButton = tk.Button(

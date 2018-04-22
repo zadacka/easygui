@@ -1,3 +1,6 @@
+import Tkinter as tk
+
+
 def to_string(something):
     if isinstance(something, str):
         return something
@@ -52,3 +55,8 @@ def get_width_and_padding(monospace):
         padding = DEFAULT_PADDING * REGULAR_FONT_WIDTH
         width_in_chars = PROP_FONT_LINE_LENGTH
     return padding, width_in_chars
+
+
+def get_num_lines(message_area):
+    num_lines, _ = message_area.index(tk.END).split('.')
+    return num_lines

@@ -5,12 +5,7 @@ except ImportError:
     import Tkinter as tk  # python 2
     import tkFont as font
 
-from easygui.boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding
-
-
-def get_num_lines(message_area):
-    num_lines, _ = message_area.index(tk.END).split('.')
-    return num_lines
+from easygui.boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding, get_num_lines
 
 
 def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
