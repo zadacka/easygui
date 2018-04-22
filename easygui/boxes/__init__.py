@@ -39,8 +39,6 @@ STANDARD_SELECTION_EVENTS = ["Return", "Button-1", "space"]
 PROP_FONT_LINE_LENGTH = 62
 FIXW_FONT_LINE_LENGTH = 80
 num_lines_displayed = 50
-runningPython27 = False
-runningPython34 = False
 
 DEFAULT_PADDING = 2
 REGULAR_FONT_WIDTH = 13

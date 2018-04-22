@@ -12,10 +12,7 @@ import os
 import sys
 import traceback
 
-# A set of variables and functions to centralize differences between
-# python 2 and 3
-from easygui.boxes import runningPython27, runningPython34
-
+runningPython27, runningPython34 = False, False
 if 0x020700F0 <= sys.hexversion <= 0x030000F0:
     runningPython27 = True
 if 0x030400F0 <= sys.hexversion <= 0x040000F0:
