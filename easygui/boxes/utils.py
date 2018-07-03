@@ -24,14 +24,12 @@ if not runningPython27 and not runningPython34:
 # the current namespace
 try:
     import tkinter as tk  # python3
-    # TODO: Ultimately this should go away once everything stops using it.
     from tkinter import *
     import tkinter.filedialog as tk_FileDialog
     import tkinter.font as tk_Font
 except ImportError:
     try:
         import Tkinter as tk  # python2
-        # TODO: Ultimately this should go away once everything stops using it.
         from Tkinter import *
         import tkFileDialog as tk_FileDialog
         import tkFont as tk_Font
