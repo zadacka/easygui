@@ -318,7 +318,6 @@ def demo_textbox():
 
 
 def demo_codebox():
-    # TODO RL: Turn this sample code into the code in this module, just for fun
     code_snippet = ("dafsdfa dasflkj pp[oadsij asdfp;ij asdfpjkop asdfpok asdfpok asdfpok" * 3) + "\n" + """# here is some dummy Python code
 for someItem in myListOfStuff:
     do something(someItem)
