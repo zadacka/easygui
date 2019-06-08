@@ -66,7 +66,7 @@ def indexbox(msg="Shall I continue?", title=" ", choices=("Yes", "No"), image=No
 
 def msgbox(msg="(Your message goes here)", title=" ", ok_button="OK", image=None):
     """Display a message box. """
-    assert isinstance(ok_button, basestring), "The 'ok_button' argument to msgbox must be a string."
+    assert isinstance(ok_button, (''.__class__, u''.__class__)), "The 'ok_button' argument to msgbox must be a string."
     return buttonbox(msg, title, choices=[ok_button], image=image, default_choice=ok_button, cancel_choice=ok_button)
 
 
