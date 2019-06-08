@@ -72,16 +72,16 @@ def integerbox(msg="", title=" ", default=None,
 
     # Validate the arguments for default, lowerbound and upperbound and
     # convert to integers
-    default = convert_to_type(default, int, "default")
-    lowerbound = convert_to_type(lowerbound, int, "lowerbound")
-    upperbound = convert_to_type(upperbound, int, "upperbound")
+    default = None if default is None else int(default)
+    lowerbound = None if lowerbound is None else int(lowerbound)
+    upperbound = None if upperbound is None else int(upperbound)
 
     while True:
         reply = enterbox(msg, title, default, image=image, root=root)
         if reply is None:
             return None
         try:
-            reply = convert_to_type(reply, int)
+            reply = int(reply)
         except ValueError:
             msgbox('The value that you entered:\n\t"{}"\nis not an integer.'.format(reply), "Error")
             continue
