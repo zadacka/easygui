@@ -19,7 +19,6 @@ __all__ = ['buttonbox',
            'enterbox',
            'exceptionbox',
            'choicebox',
-           'codebox',
            'passwordbox',
            'multpasswordbox',
            'multchoicebox',
@@ -37,7 +36,7 @@ from .boxes.choice_box import choicebox
 from .boxes.choice_box import multchoicebox
 from .boxes.derived_boxes import boolbox
 from .boxes.derived_boxes import ccbox
-from .boxes.derived_boxes import codebox
+from easygui.boxes.text_box import codebox
 from .boxes.derived_boxes import enterbox
 from .boxes.derived_boxes import exceptionbox
 from .boxes.derived_boxes import indexbox

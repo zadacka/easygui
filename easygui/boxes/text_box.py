@@ -18,6 +18,11 @@ def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
     return tb
 
 
+def codebox(msg='', title='', text=''):
+    """ Helper method similar to textbox, displays text in a monospaced font which is useful for code. """
+    return textbox(msg, title, text, codebox=True)
+
+
 class TextBox(object):
     """ Display a message, and an editable text field pre-populated with 'text' """
 

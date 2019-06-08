@@ -6,9 +6,9 @@
 
 """
 import easygui.boxes
+from easygui import codebox
 from easygui.boxes.fillable_box import __fillablebox
 from easygui.boxes.button_box import buttonbox
-from easygui.boxes import text_box as tb
 from easygui.boxes import utils as ut
 
 # -------------------------------------------------------------------
@@ -394,17 +394,3 @@ def exceptionbox(msg=None, title=None):
 # codebox
 # -------------------------------------------------------------------
 
-def codebox(msg="", title=" ", text=""):
-    """
-    Display some text in a monospaced font, with no line wrapping.
-    This function is suitable for displaying code and text that is
-    formatted using spaces.
-
-    The text parameter should be a string, or a list or tuple of lines to be
-    displayed in the textbox.
-
-    :param str msg: the msg to be displayed
-    :param str title: the window title
-    :param str text: what to display in the textbox
-    """
-    return tb.textbox(msg, title, text, codebox=True)
