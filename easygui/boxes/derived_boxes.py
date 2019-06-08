@@ -9,29 +9,6 @@ from easygui.boxes.button_box import msgbox
 from easygui.boxes.fillable_box import __fillablebox
 
 
-def convert_to_type(input_value, new_type, input_value_name=None):
-    """
-    Attempts to convert input_value to type new_type and throws error if it can't.
-
-    If input_value is None, None is returned
-    If new_type is None, input_value is returned unchanged
-    :param input_value: Value to be converted
-    :param new_type: Type to convert to
-    :param input_value_name: If not None, used in error message if input_value cannot be converted
-    :return: input_value converted to new_type, or None
-    """
-    if input_value is None or new_type is None:
-        return input_value
-
-    exception_string = (
-        'value {0}:{1} must be of type {2}.')
-    ret_value = new_type(input_value)
-#        except ValueError:
-#            raise ValueError(
-#                exception_string.format('default', default, type(default)))
-    return ret_value
-
-
 # -------------------------------------------------------------------
 # integerbox
 # -------------------------------------------------------------------
