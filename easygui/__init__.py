@@ -29,9 +29,7 @@ from .boxes.button_box import buttonbox
 from .boxes.choice_box import choicebox
 from .boxes.choice_box import multchoicebox
 from easygui.boxes.text_box import codebox, exceptionbox
-from .boxes.derived_boxes import enterbox
-from .boxes.derived_boxes import integerbox
-from .boxes.derived_boxes import passwordbox
+from easygui.boxes.fillable_box import integerbox, enterbox, passwordbox
 from easygui.boxes.button_box import ynbox, ccbox, boolbox, indexbox, msgbox
 from .boxes.diropen_box import diropenbox
 from .boxes.egstore import EgStore, read_or_create_settings
