@@ -9,10 +9,7 @@ except ImportError:
 def buttonbox(msg="", title=" ", choices=("Button[1]", "Button[2]", "Button[3]"),
               image=None, images=None, default_choice=None, cancel_choice=None,
               callback=None, run=True):
-    # TODO: add deprecation warning for changes in behaviour
-    # * the handling of 'image' and 'images' ... confusing to have multiple, simplify down to one
-    # * the function call should always run the method... if you just want an instance, use the constructor
-    # * returning row and column adds complexity... I propose to remove this, and have it in a separate box type
+
     if image and images:
         raise ValueError("Specify 'images' parameter only for buttonbox.")
     if image:
@@ -150,7 +147,7 @@ class ButtonBox(object):
         if command == 'update':  # OK was pressed
             if self._user_specified_callback:
                 # If a callback was set, call main process
-                self._user_specified_callback(self)
+                self._user_specified_callback()
             else:
                 self.stop()
         elif command in ('x', 'cancel'):
