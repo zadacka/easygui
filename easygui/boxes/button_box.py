@@ -95,7 +95,7 @@ class ButtonBox(object):
         filename_array = self._convert_to_a_list_of_lists(filenames)
         for row, list_of_filenames in enumerate(filename_array):
             for column, filename in enumerate(list_of_filenames):
-                tk_image = utils.load_tk_image(filename)
+                tk_image = utils.load_tk_image(filename, tk_master=images_frame)
                 widget = tk.Button(
                     master=images_frame,
                     takefocus=1,
