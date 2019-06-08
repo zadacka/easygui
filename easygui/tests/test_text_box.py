@@ -3,6 +3,7 @@ import unittest
 from mock import patch, Mock
 
 from easygui.boxes.text_box import TextBox, textbox
+from easygui.tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
 
 try:
     import tkinter as tk  # python 3
@@ -18,9 +19,6 @@ TEST_TEXT = 'example text'
 TEST_CODEBOX = False
 TEST_CALLBACK = Mock()
 TEST_ARGS = [TEST_MESSAGE, TEST_TITLE, TEST_TEXT, TEST_CODEBOX, TEST_CALLBACK]
-
-WAIT_0_MILLISECONDS = 0
-WAIT_1_MILLISECONDS = 1
 
 
 @patch(MODBASE + '.TextBox')
