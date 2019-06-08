@@ -10,7 +10,7 @@ from easygui.boxes.text_box import codebox
 import easygui.boxes
 from easygui.boxes.fillable_box import __fillablebox
 from easygui.boxes.button_box import buttonbox
-from easygui.boxes import utils as ut
+
 
 # -------------------------------------------------------------------
 # various boxes built on top of the basic buttonbox
@@ -362,36 +362,3 @@ def passwordbox(msg="Enter your password.", title=" ", default="",
     """
     return __fillablebox(msg, title, default, mask="*",
                          image=image, root=root)
-
-
-# -----------------------------------------------------------------------
-# exceptionbox
-# -----------------------------------------------------------------------
-def exceptionbox(msg=None, title=None):
-    """
-    Display a box that gives information about
-    an exception that has just been raised.
-
-    The caller may optionally pass in a title for the window, or a
-    msg to accompany the error information.
-
-    Note that you do not need to (and cannot) pass an exception object
-    as an argument.  The latest exception will automatically be used.
-
-    :param str msg: the msg to be displayed
-    :param str title: the window title
-    :return: None
-
-    """
-    if title is None:
-        title = "Error Report"
-    if msg is None:
-        msg = "An error (exception) has occurred in the program."
-
-    codebox(msg, title, ut.exception_format())
-
-
-# -------------------------------------------------------------------
-# codebox
-# -------------------------------------------------------------------
-

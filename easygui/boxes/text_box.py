@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 try:
     import tkinter as tk  # python 3
     import tkinter.font as font
@@ -21,6 +24,15 @@ def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
 def codebox(msg='', title='', text=''):
     """ Helper method similar to textbox, displays text in a monospaced font which is useful for code. """
     return textbox(msg, title, text, codebox=True)
+
+
+def exceptionbox(msg='An error (exception) has occurred in the program.', title='Error Report'):
+    """ Display a box that gives information about the latest exception that has been raised. """
+
+    def format_exception_for_display():
+        return "".join(traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2]))
+
+    codebox(msg, title, format_exception_for_display())
 
 
 class TextBox(object):

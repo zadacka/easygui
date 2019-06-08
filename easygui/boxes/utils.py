@@ -67,18 +67,6 @@ def lower_case_sort(things):
     return things  # RL: Not sure of this exactly
 
 
-# -----------------------------------------------------------------------
-# exception_format
-# -----------------------------------------------------------------------
-def exception_format():
-    """
-    Convert exception info into a string suitable for display.
-    """
-    return "".join(traceback.format_exception(
-        sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2]
-    ))
-
-
 # -------------------------------------------------------------------
 # utility routines
 # -------------------------------------------------------------------
