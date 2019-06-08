@@ -26,7 +26,7 @@ from easygui.boxes.derived_boxes import msgbox
 from easygui.boxes.derived_boxes import integerbox
 from easygui.boxes.derived_boxes import enterbox
 from easygui.boxes.derived_boxes import exceptionbox
-from easygui import codebox
+from easygui.boxes.text_box import codebox
 from easygui.boxes.derived_boxes import passwordbox
 
 from easygui.boxes.choice_box import choicebox

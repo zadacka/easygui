@@ -5,8 +5,9 @@
 .. highlight:: python
 
 """
+from easygui.boxes.text_box import codebox
+
 import easygui.boxes
-from easygui import codebox
 from easygui.boxes.fillable_box import __fillablebox
 from easygui.boxes.button_box import buttonbox
 from easygui.boxes import utils as ut
