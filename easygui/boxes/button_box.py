@@ -29,6 +29,47 @@ def buttonbox(msg="", title=" ", choices=("Button[1]", "Button[2]", "Button[3]")
         return reply
 
 
+def boolbox(msg="Shall I continue?", title=" ", choices=("[Y]es", "[N]o"), image=None,
+            default_choice='Yes', cancel_choice='No'):
+    """Display a box with default choices of Yes and No. Return True if the first choice (Yes) is chosen """
+    if len(choices) != 2:
+        raise AssertionError('boolbox takes exactly 2 choices!  Consider using indexbox instead')
+
+    reply = buttonbox(msg, title, choices, image, default_choice=default_choice, cancel_choice=cancel_choice)
+    return reply == choices[0]
+
+
+def ynbox(msg="Shall I continue?", title=" ", choices=("[<F1>]Yes", "[<F2>]No"), image=None,
+          default_choice='[<F1>]Yes', cancel_choice='[<F2>]No'):
+    """Display a box with default choices of Yes and No. Return True if the first choice (Yes) is chosen """
+    return boolbox(msg, title, choices, image, default_choice=default_choice, cancel_choice=cancel_choice)
+
+
+def ccbox(msg="Shall I continue?", title=" ", choices=("C[o]ntinue", "C[a]ncel"), image=None,
+          default_choice='Continue', cancel_choice='Cancel'):
+    """ Display a box with default choices of Continue and Cancel. Return True if the first choice is chosen."""
+    return boolbox(msg, title, choices, image, default_choice=default_choice, cancel_choice=cancel_choice)
+
+
+def indexbox(msg="Shall I continue?", title=" ", choices=("Yes", "No"), image=None,
+             default_choice='Yes', cancel_choice='No'):
+    """Display a buttonbox with the specified choices, returns the (zero based) index of the choice selected."""
+    reply = buttonbox(msg, title, choices, image, default_choice=default_choice, cancel_choice=cancel_choice)
+    try:
+        return list(choices).index(reply)
+    except ValueError:
+        msg = ("There is a program logic error in the EasyGui code "
+               "for indexbox.\nreply={0}, choices={1}".format(
+                   reply, choices))
+        raise AssertionError(msg)
+
+
+def msgbox(msg="(Your message goes here)", title=" ", ok_button="OK", image=None):
+    """Display a message box. """
+    assert isinstance(ok_button, basestring), "The 'ok_button' argument to msgbox must be a string."
+    return buttonbox(msg, title, choices=[ok_button], image=image, default_choice=ok_button, cancel_choice=ok_button)
+
+
 class ButtonBox(object):
     def __init__(self, msg, title, choices, images, default_choice, cancel_choice, callback):
         self._user_specified_callback = callback

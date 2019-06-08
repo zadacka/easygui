@@ -1,3 +1,5 @@
+import easygui.boxes.button_box
+
 __author__ = 'Robert'
 """
 from:
@@ -24,7 +26,7 @@ def get_user_input(target_value, dice_rolls):
             choices = dice_choices
         else:
             choices = operator_choices
-        var = eg.indexbox(''.join(raw_user_input), "Target value: {}".format(target_value), choices)
+        var = easygui.boxes.button_box.indexbox(''.join(raw_user_input), "Target value: {}".format(target_value), choices)
         if var is None:
             raise ValueError("Dialog closed with invalid entry")
         choice = choices[var]

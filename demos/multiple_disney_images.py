@@ -9,11 +9,13 @@ Display more than one image at a time
 
 import sys
 
+import easygui.boxes.button_box
+
 sys.path.append('..')
 import easygui as eg
 
 # A welcome message
-reply = eg.msgbox("Welcome to the quiz", "Quiz!")
+reply = easygui.boxes.button_box.msgbox("Welcome to the quiz", "Quiz!")
 if reply is None:
     exit()
 
@@ -32,8 +34,8 @@ while 1:
         break
 
     if reply == images[0]:
-        eg.msgbox("Well done!", "Correct")
+        easygui.boxes.button_box.msgbox("Well done!", "Correct")
         break
     else:
-        eg.msgbox("Wrong", "Failure")
+        easygui.boxes.button_box.msgbox("Wrong", "Failure")
 

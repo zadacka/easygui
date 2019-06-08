@@ -9,11 +9,6 @@ __all__ = ['buttonbox',
            'fileopenbox',
            'filesavebox',
            'textbox',
-           'ynbox',
-           'ccbox',
-           'boolbox',
-           'indexbox',
-           'msgbox',
            'integerbox',
            'multenterbox',
            'enterbox',
@@ -33,15 +28,11 @@ from demos.demo import easygui_demo as egdemo
 from .boxes.button_box import buttonbox
 from .boxes.choice_box import choicebox
 from .boxes.choice_box import multchoicebox
-from .boxes.derived_boxes import boolbox
-from .boxes.derived_boxes import ccbox
 from easygui.boxes.text_box import codebox, exceptionbox
 from .boxes.derived_boxes import enterbox
-from .boxes.derived_boxes import indexbox
 from .boxes.derived_boxes import integerbox
-from .boxes.derived_boxes import msgbox
 from .boxes.derived_boxes import passwordbox
-from .boxes.derived_boxes import ynbox
+from easygui.boxes.button_box import ynbox, ccbox, boolbox, indexbox, msgbox
 from .boxes.diropen_box import diropenbox
 from .boxes.egstore import EgStore, read_or_create_settings
 from .boxes.fileopen_box import fileopenbox

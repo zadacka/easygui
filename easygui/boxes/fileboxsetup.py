@@ -109,7 +109,7 @@ class FileTypeObject:
 
         self.masks = list()
 
-        if isinstance(filemask, easygui.boxes.basestring):  # a str or unicode
+        if isinstance(filemask, basestring):  # a str or unicode
             self.initializeFromString(filemask)
 
         elif isinstance(filemask, list):

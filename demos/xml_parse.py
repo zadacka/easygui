@@ -1,3 +1,5 @@
+import easygui.boxes.button_box
+
 __author__ = 'Robert'
 """
 from:
@@ -29,4 +31,4 @@ for catalog in doc.getiterator('catalog'):
         books.append('{0} | {1} | {2}'.format(item_name, item_desc, item_status))
 
     # Create message box to display print_xml.
-    eg.msgbox('\n'.join(books), title="XML Reader")
+    easygui.boxes.button_box.msgbox('\n'.join(books), title="XML Reader")

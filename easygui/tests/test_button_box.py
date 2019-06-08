@@ -1,10 +1,9 @@
-import unittest
-
 import os
+import unittest
 
 from mock import patch, Mock
 
-from easygui import buttonbox
+from easygui import buttonbox, boolbox, ynbox, ccbox, indexbox, msgbox
 from easygui.tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
 
 MODBASE = 'easygui.boxes.button_box'
@@ -47,6 +46,66 @@ class TestButtonBoxUtilities(unittest.TestCase):
         )
         mock_instance.run.assert_called_once()
         self.assertEqual(reply, 'reply')
+
+
+@patch(MODBASE + '.ButtonBox')
+class TestBoolboxAndVariants(unittest.TestCase):
+
+    def test_returnsTrueWhenFirstChoiceIsSelected(self, mock_button_box_class):
+        test_first_choice = 'Yes'
+        test_other_choice = 'No'
+        mock_button_box_class.return_value.run.return_value = test_first_choice
+        for box in (boolbox, ynbox, ccbox):
+            self.assertEqual(box(choices=(test_first_choice, test_other_choice)), True)
+
+    def test_returnsFalseWhenSecondChoiceIsSelected(self, mock_button_box_class):
+        test_first_choice = 'Yes'
+        test_other_choice = 'No'
+        mock_button_box_class.return_value.run.return_value = test_other_choice
+        for box in (boolbox, ynbox, ccbox):
+            self.assertEqual(box(choices=(test_first_choice, test_other_choice)), False)
+
+    def test_raisesIfMoreThanTwoChoicesAreSupplied(self, _):
+        for box in (boolbox, ynbox, ccbox):
+            self.assertRaises(AssertionError, box, choices=('Yes', 'No', 'Maybe'))
+
+
+@patch(MODBASE + '.ButtonBox')
+class TestIndexbox(unittest.TestCase):
+    def test_returnsZeroWhenZerothIndexChoiceIsSelected(self, mock_button_box_class):
+        test_choices = ('zeroth', 'first', 'second')
+        mock_button_box_class.return_value.run.return_value = test_choices[0]
+        self.assertEqual(indexbox(choices=test_choices), 0)
+
+    def test_returnsTwoWhenSecondIndexChoiceIsSelected(self, mock_button_box_class):
+        test_choices = ('zeroth', 'first', 'second')
+        mock_button_box_class.return_value.run.return_value = test_choices[1]
+        self.assertEqual(indexbox(choices=test_choices), 1)
+
+    def test_raisesIfReturnValueNotInChoices(self, mock_button_box_class):
+        test_choices = ('zeroth', 'first', 'second')
+        mock_button_box_class.return_value.run.return_value = 'nineth'
+        self.assertRaises(AssertionError, indexbox, choices=test_choices)
+
+
+@patch(MODBASE + '.ButtonBox')
+class TestMsgbox(unittest.TestCase):
+    def test_msgbox_instantiatesAndRunsButtonBoxReturningTheReply(self, mock_button_box_class):
+        test_ok_button = 'OK'
+        mock_button_box_class.return_value.run.return_value = test_ok_button
+        reply = msgbox()
+
+        mock_button_box_class.assert_called_once_with(
+            msg='(Your message goes here)',
+            title=" ",
+            choices=[test_ok_button],
+            images=None,
+            default_choice=test_ok_button,
+            cancel_choice=test_ok_button,
+            callback=None,
+        )
+        mock_button_box_class.return_value.run.assert_called_once()
+        self.assertEqual(reply, test_ok_button)
 
 
 class TestButtonBoxIntegration(unittest.TestCase):

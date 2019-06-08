@@ -18,11 +18,7 @@ from easygui.boxes.filesave_box import filesavebox
 from easygui.boxes.multi_fillable_box import multenterbox
 from easygui.boxes.multi_fillable_box import multpasswordbox
 
-from easygui.boxes.derived_boxes import ynbox
-from easygui.boxes.derived_boxes import ccbox
-from easygui.boxes.derived_boxes import boolbox
-from easygui.boxes.derived_boxes import indexbox
-from easygui.boxes.derived_boxes import msgbox
+from easygui.boxes.button_box import ynbox, ccbox, boolbox, indexbox, msgbox
 from easygui.boxes.derived_boxes import integerbox
 from easygui.boxes.derived_boxes import enterbox
 from easygui.boxes.text_box import codebox, exceptionbox

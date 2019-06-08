@@ -1,3 +1,5 @@
+import easygui.boxes.button_box
+
 __author__ = 'Future Engineer'
 
 """
@@ -22,7 +24,7 @@ import sys
 # Set a breakpoint
 code.interact("Code paused.  Hit ctrl-D when ready to continue", local=dict(globals(), **locals()))
 while True:
-    eg.msgbox("""Welcome to my program!""", image = "pi.jpg")
+    easygui.boxes.button_box.msgbox("""Welcome to my program!""", image="pi.jpg")
     msgbox("Select img ")
     nam=fileopenbox(filetypes=['*'])
     print(nam)

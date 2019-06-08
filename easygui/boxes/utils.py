@@ -49,14 +49,6 @@ try:
 except:
     pass
 
-# Code should use 'basestring' anywhere you might think to use the system 'str'.  This is all to support
-# Python 2.  If 2 ever goes away, this logic can go away and uses of
-# utils.basestring should be changed to just str
-if runningPython27:
-    pass
-if runningPython34:
-    basestring = str
-
 
 def lower_case_sort(things):
     if runningPython34:
