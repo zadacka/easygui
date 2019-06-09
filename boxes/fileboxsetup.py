@@ -9,14 +9,13 @@ Version |release|
 """
 import os
 
-import easygui.boxes
-
 
 # -------------------------------------------------------------------
 #
 # fileboxSetup
 #
 # -------------------------------------------------------------------
+import sys
 
 
 def fileboxSetup(default, filetypes):
@@ -68,7 +67,7 @@ def fileboxSetup(default, filetypes):
     if initialFileTypeObject in (filetypeObjects[0], filetypeObjects[-1]):
         pass
     else:
-        if easygui.boxes.runningPython27:
+        if 0x020700F0 <= sys.hexversion <= 0x030000F0:  # running Python 2.7
             filetypeObjects.append(initialFileTypeObject)
         else:
             filetypeObjects.insert(0, initialFileTypeObject)

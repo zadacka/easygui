@@ -1,7 +1,6 @@
-import easygui.boxes
-from easygui.boxes.button_box import msgbox
-from easygui.boxes import bindArrows, GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
-    TEXT_ENTRY_FONT_SIZE, PROPORTIONAL_FONT_FAMILY, PROPORTIONAL_FONT_SIZE, tk
+from boxes.button_box import msgbox
+from boxes import bindArrows, GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
+    TEXT_ENTRY_FONT_SIZE, PROPORTIONAL_FONT_FAMILY, PROPORTIONAL_FONT_SIZE, tk, load_tk_image
 
 
 def integerbox(msg=None, title=" ", default=None, lowerbound=0, upperbound=99, image=None, root=None):
@@ -81,7 +80,7 @@ class FillableBox(object):
         message_frame.pack(side=tk.TOP, fill=tk.BOTH)
 
         try:
-            tk_image = easygui.boxes.load_tk_image(image)
+            tk_image = load_tk_image(image)
         except Exception as inst:
             print(inst)
             tk_image = None

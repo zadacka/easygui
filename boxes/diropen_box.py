@@ -9,7 +9,7 @@ Version |release|
 
 
 import os
-from easygui.boxes import tk_FileDialog, getFileDialogTitle, tk
+from boxes import tk_FileDialog, getFileDialogTitle, tk
 
 
 # -------------------------------------------------------------------

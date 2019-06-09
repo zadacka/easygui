@@ -1,7 +1,7 @@
 import re
 
 
-from easygui.boxes import get_width_and_padding, tk, load_tk_image
+from boxes import get_width_and_padding, tk, load_tk_image
 
 
 def buttonbox(msg="", title=" ", choices=("Button[1]", "Button[2]", "Button[3]"),

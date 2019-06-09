@@ -3,13 +3,13 @@ import unittest
 
 from mock import patch, Mock
 
-from easygui import buttonbox, boolbox, ynbox, ccbox, indexbox, msgbox
-from easygui.tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
+from boxes.button_box import buttonbox, boolbox, ynbox, ccbox, indexbox, msgbox
+from tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
 
-MODBASE = 'easygui.boxes.button_box'
+MODBASE = 'boxes.button_box'
 
-package_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))  # My parent's directory
-image=os.path.join(package_dir, 'python_and_check_logo.gif')
+test_dir = os.path.dirname(__file__)
+image = os.path.join(test_dir, 'python_and_check_logo.gif')
 images = [image, image, image]
 
 TEST_MESSAGE = 'example message'

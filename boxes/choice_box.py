@@ -1,6 +1,6 @@
 import string
 
-from easygui.boxes import get_width_and_padding, get_num_lines, tk, bindArrows
+from boxes import get_width_and_padding, get_num_lines, tk, bindArrows
 
 
 def choicebox(msg="Pick an item", title="", choices=[], preselect=[], callback=None, run=True):

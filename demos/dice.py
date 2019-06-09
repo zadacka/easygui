@@ -1,4 +1,4 @@
-import easygui.boxes.button_box
+from boxes.button_box import indexbox
 
 __author__ = 'Robert'
 """
@@ -8,7 +8,7 @@ http://stackoverflow.com/questions/20317314/python-function-in-a-while-loop-ruin
 """
 import sys
 sys.path.append('..')
-import easygui as eg
+
 
 
 
@@ -26,7 +26,7 @@ def get_user_input(target_value, dice_rolls):
             choices = dice_choices
         else:
             choices = operator_choices
-        var = easygui.boxes.button_box.indexbox(''.join(raw_user_input), "Target value: {}".format(target_value), choices)
+        var = indexbox(''.join(raw_user_input), "Target value: {}".format(target_value), choices)
         if var is None:
             raise ValueError("Dialog closed with invalid entry")
         choice = choices[var]

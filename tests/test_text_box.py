@@ -2,11 +2,11 @@ import unittest
 
 from mock import patch, Mock
 
-from easygui.boxes.text_box import TextBox, textbox
-from easygui.tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
-from easygui.boxes import tk
+from boxes.text_box import TextBox, textbox
+from tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
+from boxes import tk
 
-MODBASE = 'easygui.boxes.text_box'
+MODBASE = 'boxes.text_box'
 
 TEST_MESSAGE = 'example message'
 TEST_TITLE = 'example title'

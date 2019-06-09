@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import easygui.boxes
 
 """
 
@@ -12,9 +11,7 @@ Version |release|
 """
 
 import os
-from easygui.boxes import tk, tk_FileDialog
-from easygui.boxes import fileboxsetup as fbs
-
+from boxes import tk, tk_FileDialog, fileboxsetup as fbs, getFileDialogTitle
 
 
 # -------------------------------------------------------------------
@@ -99,7 +96,7 @@ def fileopenbox(msg=None, title=None, default='*', filetypes=None, multiple=Fals
 
     func = tk_FileDialog.askopenfilenames if multiple else tk_FileDialog.askopenfilename
     ret_val = func(parent=localRoot,
-                   title=easygui.boxes.getFileDialogTitle(msg, title),
+                   title=getFileDialogTitle(msg, title),
                    initialdir=initialdir, initialfile=initialfile,
                    filetypes=filetypes
                    )

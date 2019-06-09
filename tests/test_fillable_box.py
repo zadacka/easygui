@@ -2,9 +2,9 @@ import unittest
 
 from mock import patch, call
 
-from easygui import integerbox
+from boxes.fillable_box import integerbox
 
-MODBASE = 'easygui.boxes.fillable_box'
+MODBASE = 'boxes.fillable_box'
 
 
 class TestIntegerbox(unittest.TestCase):

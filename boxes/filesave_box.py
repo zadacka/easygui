@@ -10,8 +10,8 @@ Version |release|
 
 import os
 
-from easygui.boxes import tk, tk_FileDialog, getFileDialogTitle
-from easygui.boxes.fileboxsetup import fileboxSetup
+from boxes import tk, tk_FileDialog, getFileDialogTitle
+from boxes.fileboxsetup import fileboxSetup
 
 
 # -------------------------------------------------------------------

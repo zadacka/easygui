@@ -9,20 +9,20 @@
 import os
 import sys
 
-from easygui.boxes.button_box import buttonbox
-from easygui.boxes.text_box import textbox
-from easygui.boxes.diropen_box import diropenbox
-from easygui.boxes.fileopen_box import fileopenbox
-from easygui.boxes.filesave_box import filesavebox
-from easygui.boxes.multi_fillable_box import multenterbox
-from easygui.boxes.multi_fillable_box import multpasswordbox
+from boxes.button_box import buttonbox
+from boxes.text_box import textbox
+from boxes.diropen_box import diropenbox
+from boxes.fileopen_box import fileopenbox
+from boxes.filesave_box import filesavebox
+from boxes.multi_fillable_box import multenterbox
+from boxes.multi_fillable_box import multpasswordbox
 
-from easygui.boxes.button_box import ynbox, ccbox, boolbox, indexbox, msgbox
-from easygui.boxes.fillable_box import integerbox, enterbox, passwordbox
-from easygui.boxes.text_box import codebox, exceptionbox
+from boxes.button_box import ynbox, ccbox, boolbox, indexbox, msgbox
+from boxes.fillable_box import integerbox, enterbox, passwordbox
+from boxes.text_box import codebox, exceptionbox
 
-from easygui.boxes.choice_box import choicebox
-from easygui.boxes.choice_box import multchoicebox
+from boxes.choice_box import choicebox
+from boxes.choice_box import multchoicebox
 
 # --------------------------------------------------------------
 #

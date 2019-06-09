@@ -1,7 +1,7 @@
 import sys
 import traceback
 
-from easygui.boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding, get_num_lines, tk, tk_Font
+from boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding, get_num_lines, tk, tk_Font
 
 
 def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
