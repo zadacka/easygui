@@ -1,14 +1,7 @@
 import sys
 import traceback
 
-try:
-    import tkinter as tk  # python 3
-    import tkinter.font as font
-except ImportError:
-    import Tkinter as tk  # python 2
-    import tkFont as font
-
-from easygui.boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding, get_num_lines
+from easygui.boxes import GLOBAL_WINDOW_POSITION, get_width_and_padding, get_num_lines, tk, tk_Font
 
 
 def textbox(msg='', title='', text='', codebox=False, callback=None, run=True):
@@ -54,7 +47,7 @@ class TextBox(object):
         self.message_area = self._configure_message_area(box_root=self.box_root, code_box=codebox)
         self._set_msg_area("" if msg is None else msg)
 
-        self.MONOSPACE_FONT = font.Font(family='Courier')
+        self.MONOSPACE_FONT = tk_Font.Font(family='Courier')
         self.text_area = self._configure_text_area(box_root=self.box_root, code_box=codebox)
         self._configure_buttons()
 

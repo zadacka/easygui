@@ -1,12 +1,7 @@
 import re
 
-import easygui.boxes
-from easygui.boxes import get_width_and_padding
 
-try:
-    import tkinter as tk  # python 3
-except ImportError:
-    import Tkinter as tk  # python 2
+from easygui.boxes import get_width_and_padding, tk, load_tk_image
 
 
 def buttonbox(msg="", title=" ", choices=("Button[1]", "Button[2]", "Button[3]"),
@@ -139,7 +134,7 @@ class ButtonBox(object):
         filename_array = self._convert_to_a_list_of_lists(filenames)
         for row, list_of_filenames in enumerate(filename_array):
             for column, filename in enumerate(list_of_filenames):
-                tk_image = easygui.boxes.load_tk_image(filename, tk_master=images_frame)
+                tk_image = load_tk_image(filename, tk_master=images_frame)
                 widget = tk.Button(
                     master=images_frame,
                     takefocus=1,

@@ -1,14 +1,7 @@
 import easygui.boxes
 from easygui.boxes.button_box import msgbox
 from easygui.boxes import bindArrows, GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
-    TEXT_ENTRY_FONT_SIZE, PROPORTIONAL_FONT_FAMILY, PROPORTIONAL_FONT_SIZE
-
-try:
-    import tkinter as tk  # python 3
-    import tkinter.font as tk_Font
-except:
-    import Tkinter as tk  # python 2
-    import tkFont as tk_Font
+    TEXT_ENTRY_FONT_SIZE, PROPORTIONAL_FONT_FAMILY, PROPORTIONAL_FONT_SIZE, tk
 
 
 def integerbox(msg=None, title=" ", default=None, lowerbound=0, upperbound=99, image=None, root=None):

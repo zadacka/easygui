@@ -7,9 +7,11 @@ if not 0x020700F0 <= sys.hexversion <= 0x030000F0 and not 0x030400F0 <= sys.hexv
 try:
     import tkinter as tk  # python 3
     import tkinter.filedialog as tk_FileDialog
+    import tkinter.font as tk_Font
 except ImportError:
     import Tkinter as tk  # python 2
     import tkFileDialog as tk_FileDialog
+    import tkFont as tk_Font
 
 if tk.TkVersion < 8.0:
     raise ImportError("You must use python-tk (tkinter) version 8.0 or higher")

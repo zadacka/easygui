@@ -9,14 +9,7 @@ Version |release|
 
 
 import os
-from easygui.boxes import tk_FileDialog, getFileDialogTitle
-
-try:
-    import tkinter as tk  # python 3
-    import tkinter.font as tk_Font
-except:
-    import Tkinter as tk  # python 2
-    import tkFont as tk_Font
+from easygui.boxes import tk_FileDialog, getFileDialogTitle, tk
 
 
 # -------------------------------------------------------------------

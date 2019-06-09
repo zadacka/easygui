@@ -4,12 +4,7 @@ from mock import patch, Mock
 
 from easygui.boxes.text_box import TextBox, textbox
 from easygui.tests import WAIT_0_MILLISECONDS, WAIT_1_MILLISECONDS
-
-try:
-    import tkinter as tk  # python 3
-except ImportError:
-    import Tkinter as tk  # python 2
-
+from easygui.boxes import tk
 
 MODBASE = 'easygui.boxes.text_box'
 

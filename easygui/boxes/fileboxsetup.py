@@ -11,12 +11,6 @@ import os
 
 import easygui.boxes
 
-try:
-    import tkinter as tk  # python 3
-    import tkinter.font as tk_Font
-except:
-    import Tkinter as tk  # python 2
-    import tkFont as tk_Font
 
 # -------------------------------------------------------------------
 #

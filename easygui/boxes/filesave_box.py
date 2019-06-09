@@ -10,16 +10,8 @@ Version |release|
 
 import os
 
-import easygui.boxes
-from easygui.boxes import tk_FileDialog, fileboxsetup as fbs
-
-try:
-    import tkinter as tk  # python 3
-    import tkinter.font as tk_Font
-except:
-    import Tkinter as tk  # python 2
-    import tkFont as tk_Font
-
+from easygui.boxes import tk, tk_FileDialog, getFileDialogTitle
+from easygui.boxes.fileboxsetup import fileboxSetup
 
 
 # -------------------------------------------------------------------
@@ -49,12 +41,12 @@ def filesavebox(msg=None, title=None, default="", filetypes=None):
     localRoot = tk.Tk()
     localRoot.withdraw()
 
-    initialbase, initialfile, initialdir, filetypes = fbs.fileboxSetup(
+    initialbase, initialfile, initialdir, filetypes = fileboxSetup(
         default, filetypes)
 
     f = tk_FileDialog.asksaveasfilename(
         parent=localRoot,
-        title=easygui.boxes.getFileDialogTitle(
+        title=getFileDialogTitle(
             msg, title),
         initialfile=initialfile, initialdir=initialdir,
         filetypes=filetypes
