@@ -356,8 +356,6 @@ class GUItk(object):
                 font=(PROPORTIONAL_FONT_FAMILY, TEXT_ENTRY_FONT_SIZE))
             entryWidget.pack(side=tk.RIGHT, padx="3m")
 
-            self.bindArrows(entryWidget)
-
             entryWidget.bind("<Return>", self.ok_pressed)
             entryWidget.bind("<Escape>", self.cancel_pressed)
 
@@ -383,7 +381,6 @@ class GUItk(object):
     def create_ok_button(self):
 
         okButton = tk.Button(self.buttonsFrame, takefocus=1, text="OK")
-        self.bindArrows(okButton)
         okButton.pack(expand=1, side=tk.LEFT, padx='3m', pady='3m',
                       ipadx='2m', ipady='1m')
 
@@ -397,7 +394,6 @@ class GUItk(object):
     def create_cancel_button(self):
 
         cancelButton = tk.Button(self.buttonsFrame, takefocus=1, text="Cancel")
-        self.bindArrows(cancelButton)
         cancelButton.pack(expand=1, side=tk.LEFT, padx='3m', pady='3m',
                           ipadx='2m', ipady='1m')
 

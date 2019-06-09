@@ -16,24 +16,6 @@ except ImportError:
 if tk.TkVersion < 8.0:
     raise ImportError("You must use python-tk (tkinter) version 8.0 or higher")
 
-boxRoot = None
-
-
-def bindArrows(widget):
-    widget.bind("<Down>", tabRight)
-    widget.bind("<Up>", tabLeft)
-
-    widget.bind("<Right>", tabRight)
-    widget.bind("<Left>", tabLeft)
-
-
-def tabRight(event):
-    boxRoot.event_generate("<Tab>")
-
-
-def tabLeft(event):
-    boxRoot.event_generate("<Shift-Tab>")
-
 
 GLOBAL_WINDOW_POSITION = "+300+200"
 PROPORTIONAL_FONT_FAMILY = ("MS", "Sans", "Serif")

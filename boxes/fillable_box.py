@@ -1,5 +1,5 @@
 from boxes.button_box import msgbox
-from boxes import bindArrows, GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
+from boxes import GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
     TEXT_ENTRY_FONT_SIZE, PROPORTIONAL_FONT_FAMILY, PROPORTIONAL_FONT_SIZE, tk, load_tk_image
 
 
@@ -105,7 +105,6 @@ class FillableBox(object):
         message_widget.pack(side=tk.RIGHT, expand=1, fill=tk.BOTH, padx='3m', pady='3m')
 
         entry_widget = tk.Entry(entry_frame, width=40)
-        bindArrows(entry_widget)
         entry_widget.configure(font=(PROPORTIONAL_FONT_FAMILY, TEXT_ENTRY_FONT_SIZE))
         if mask:
             entry_widget.configure(show=mask)
@@ -122,7 +121,6 @@ class FillableBox(object):
             ok_button.bind("<{}>".format(selectionEvent), self._set_result_to_entered_text_and_quit)
 
         cancel_button = tk.Button(buttons_frame, takefocus=1, text="Cancel")
-        bindArrows(cancel_button)
         cancel_button.pack(expand=1, side=tk.RIGHT, padx='3m', pady='3m', ipadx='2m', ipady='1m')
         for selectionEvent in STANDARD_SELECTION_EVENTS:
             cancel_button.bind("<{}>".format(selectionEvent), self._set_result_to_none_and_quit)
