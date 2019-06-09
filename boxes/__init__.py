@@ -14,6 +14,7 @@ except ImportError:
     import tkFont as tk_Font
 
 if tk.TkVersion < 8.0:
+    # TODO: requirements file should enforce this
     raise ImportError("You must use python-tk (tkinter) version 8.0 or higher")
 
 
