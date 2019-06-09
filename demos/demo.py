@@ -11,9 +11,7 @@ import sys
 
 from boxes.button_box import buttonbox
 from boxes.text_box import textbox
-from boxes.diropen_box import diropenbox
-from boxes.fileopen_box import fileopenbox
-from boxes.filesave_box import filesavebox
+from boxes.file_boxes import filesavebox, fileopenbox, diropenbox
 from boxes.multi_fillable_box import multenterbox
 from boxes.multi_fillable_box import multpasswordbox
 
@@ -358,7 +356,7 @@ def demo_filesavebox():
     title = "File SaveAs"
     msg = "Save file as:"
 
-    f = filesavebox(msg, title, default=filename)
+    f = filesavebox(title, default_directory=filename)
     print("You chose to save file: {}".format(f))
     return f
 
@@ -369,10 +367,10 @@ def demo_diropenbox():
     d = diropenbox(msg, title)
     print("You chose directory...: {}".format(d))
 
-    d = diropenbox(msg, title, default="./")
+    d = diropenbox(msg, title, default_directory="./")
     print("You chose directory...: {}".format(d))
 
-    d = diropenbox(msg, title, default="c:/")
+    d = diropenbox(msg, title, default_directory="c:/")
     print("You chose directory...: {}".format(d))
     return d
 
@@ -422,14 +420,13 @@ def demo_fileopenbox():
     msg = "Python files"
     title = "Open files"
     default = "*.py"
-    f = fileopenbox(msg, title, default=default)
+    f = fileopenbox(title, default_directory=default)
     print("You chose to open file: {}".format(f))
 
     default = "./*.gif"
     msg = "Some other file types (Multi-select)"
     filetypes = ["*.jpg", ["*.zip", "*.tgs", "*.gz",
                            "Archive files"], ["*.htm", "*.html", "HTML files"]]
-    f = fileopenbox(
-        msg, title, default=default, filetypes=filetypes, multiple=True)
+    f = fileopenbox(title, default_directory=default, filetypes=filetypes, multiple=True)
     print("You chose to open file: %s" % f)
     return f

@@ -16,16 +16,6 @@ except ImportError:
 if tk.TkVersion < 8.0:
     raise ImportError("You must use python-tk (tkinter) version 8.0 or higher")
 
-
-def to_string(something):
-    if isinstance(something, str):
-        return something
-    elif isinstance(something, iter):
-        return "".join(something)  # raises TypeError on failure
-    else:
-        "{}".format(something)
-
-
 boxRoot = None
 
 
@@ -122,19 +112,3 @@ def load_tk_image(filename, tk_master=None):
                 msg += "\nPIL library isn't installed.  If it isn't installed, only .gif files can be used."
             raise ValueError(msg)
     return tk_image
-
-
-def getFileDialogTitle(msg, title):
-    """
-    Create nicely-formatted string based on arguments msg and title
-    :param msg: the msg to be displayed
-    :param title: the window title
-    :return: None
-    """
-    if msg and title:
-        return "%s - %s" % (title, msg)
-    if msg and not title:
-        return str(msg)
-    if title and not msg:
-        return str(title)
-    return None  # no message and no title
