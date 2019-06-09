@@ -9,7 +9,8 @@ Version |release|
 
 
 import os
-from easygui.boxes import utils as ut
+from easygui.boxes import tk_FileDialog, getFileDialogTitle
+
 try:
     import tkinter as tk  # python 3
     import tkinter.font as tk_Font
@@ -36,12 +37,12 @@ def diropenbox(msg=None, title=None, default=None):
     :param str default: starting directory when dialog opens
     :return: Normalized path selected by user
     """
-    title = ut.getFileDialogTitle(msg, title)
+    title = getFileDialogTitle(msg, title)
     localRoot = tk.Tk()
     localRoot.withdraw()
     if not default:
         default = None
-    f = ut.tk_FileDialog.askdirectory(
+    f = tk_FileDialog.askdirectory(
         parent=localRoot, title=title, initialdir=default, initialfile=None
     )
     localRoot.destroy()

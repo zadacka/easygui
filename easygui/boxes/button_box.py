@@ -1,4 +1,7 @@
-from easygui.boxes import utils, get_width_and_padding
+import re
+
+import easygui.boxes
+from easygui.boxes import get_width_and_padding
 
 try:
     import tkinter as tk  # python 3
@@ -136,7 +139,7 @@ class ButtonBox(object):
         filename_array = self._convert_to_a_list_of_lists(filenames)
         for row, list_of_filenames in enumerate(filename_array):
             for column, filename in enumerate(list_of_filenames):
-                tk_image = utils.load_tk_image(filename, tk_master=images_frame)
+                tk_image = easygui.boxes.load_tk_image(filename, tk_master=images_frame)
                 widget = tk.Button(
                     master=images_frame,
                     takefocus=1,
@@ -157,7 +160,7 @@ class ButtonBox(object):
         buttons_frame.grid(row=2)
 
         for column, button_text in enumerate(choices):
-            clean_text, hotkey, hotkey_position = utils.parse_hotkey(button_text)
+            clean_text, hotkey, hotkey_position = parse_hotkey(button_text)
             widget = tk.Button(
                 master=buttons_frame,
                 takefocus=1,
@@ -228,3 +231,51 @@ class ButtonBox(object):
                 self.choice_text = button['original_text']
 
         return  # some key was pressed, but no hotkey registered to it
+
+
+def parse_hotkey(text):
+    """
+    Extract a desired hotkey from the text.  The format to enclose
+    the hotkey in square braces
+    as in Button_[1] which would assign the keyboard key 1 to that button.
+      The one will be included in the
+    button text.  To hide they key, use double square braces as in:  Ex[[qq]]
+    it  , which would assign
+    the q key to the Exit button. Special keys such as <Enter> may also be
+    used:  Move [<left>]  for a full
+    list of special keys, see this reference: http://infohoglobal_state.nmt.edu/tcc/help/
+    pubs/tkinter/web/key-names.html
+    :param text:
+    :return: list containing cleaned text, hotkey, and hotkey position within
+    cleaned text.
+    """
+
+    ret_val = [text, None, None]  # Default return values
+    if text is None:
+        return ret_val
+
+    # Single character, remain visible
+    res = re.search('(?<=\[).(?=\])', text)
+    if res:
+        start = res.start(0)
+        end = res.end(0)
+        caption = text[:start - 1] + text[start:end] + text[end + 1:]
+        ret_val = [caption, text[start:end], start - 1]
+
+    # Single character, hide it
+    res = re.search('(?<=\[\[).(?=\]\])', text)
+    if res:
+        start = res.start(0)
+        end = res.end(0)
+        caption = text[:start - 2] + text[end + 2:]
+        ret_val = [caption, text[start:end], None]
+
+    # a Keysym.  Always hide it
+    res = re.search('(?<=\[\<).+(?=\>\])', text)
+    if res:
+        start = res.start(0)
+        end = res.end(0)
+        caption = text[:start - 2] + text[end + 2:]
+        ret_val = [caption, '<{}>'.format(text[start:end]), None]
+
+    return ret_val

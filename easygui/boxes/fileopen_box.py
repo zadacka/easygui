@@ -1,4 +1,7 @@
 from __future__ import print_function
+
+import easygui.boxes
+
 """
 
 .. moduleauthor:: easygui developers and Stephen Raymond Ferg
@@ -9,10 +12,8 @@ Version |release|
 """
 
 import os
-from easygui.boxes import utils as ut
+from easygui.boxes import tk, tk_FileDialog
 from easygui.boxes import fileboxsetup as fbs
-
-tk = ut.tk
 
 
 
@@ -96,9 +97,9 @@ def fileopenbox(msg=None, title=None, default='*', filetypes=None, multiple=Fals
     elif initialbase == "*":
         initialfile = None
 
-    func = ut.tk_FileDialog.askopenfilenames if multiple else ut.tk_FileDialog.askopenfilename
+    func = tk_FileDialog.askopenfilenames if multiple else tk_FileDialog.askopenfilename
     ret_val = func(parent=localRoot,
-                   title=ut.getFileDialogTitle(msg, title),
+                   title=easygui.boxes.getFileDialogTitle(msg, title),
                    initialdir=initialdir, initialfile=initialfile,
                    filetypes=filetypes
                    )

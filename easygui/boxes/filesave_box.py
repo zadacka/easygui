@@ -10,8 +10,8 @@ Version |release|
 
 import os
 
-from easygui.boxes import utils as ut
-from easygui.boxes import fileboxsetup as fbs
+import easygui.boxes
+from easygui.boxes import tk_FileDialog, fileboxsetup as fbs
 
 try:
     import tkinter as tk  # python 3
@@ -52,9 +52,9 @@ def filesavebox(msg=None, title=None, default="", filetypes=None):
     initialbase, initialfile, initialdir, filetypes = fbs.fileboxSetup(
         default, filetypes)
 
-    f = ut.tk_FileDialog.asksaveasfilename(
+    f = tk_FileDialog.asksaveasfilename(
         parent=localRoot,
-        title=ut.getFileDialogTitle(
+        title=easygui.boxes.getFileDialogTitle(
             msg, title),
         initialfile=initialfile, initialdir=initialdir,
         filetypes=filetypes

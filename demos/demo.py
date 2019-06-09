@@ -9,7 +9,6 @@
 import os
 import sys
 
-from easygui.boxes import utils as ut
 from easygui.boxes.button_box import buttonbox
 from easygui.boxes.text_box import textbox
 from easygui.boxes.diropen_box import diropenbox
@@ -99,7 +98,8 @@ def easygui_demo():
     msg = []
     msg.append("Pick the kind of box that you wish to demo.")
     msg.append(" * Python version {}".format(sys.version))
-    msg.append(" * Tk version {}".format(ut.TkVersion))
+    from easygui.boxes import tk
+    msg.append(" * Tk version {}".format(tk.TkVersion))
     intro_message = "\n".join(msg)
     title = "EasyGui"
     # Table that relates keys in choicebox with functions to execute

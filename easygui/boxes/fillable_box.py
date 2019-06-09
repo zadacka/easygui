@@ -1,5 +1,6 @@
+import easygui.boxes
 from easygui.boxes.button_box import msgbox
-from easygui.boxes import utils as ut, bindArrows, GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
+from easygui.boxes import bindArrows, GLOBAL_WINDOW_POSITION, STANDARD_SELECTION_EVENTS, \
     TEXT_ENTRY_FONT_SIZE, PROPORTIONAL_FONT_FAMILY, PROPORTIONAL_FONT_SIZE
 
 try:
@@ -87,7 +88,7 @@ class FillableBox(object):
         message_frame.pack(side=tk.TOP, fill=tk.BOTH)
 
         try:
-            tk_image = ut.load_tk_image(image)
+            tk_image = easygui.boxes.load_tk_image(image)
         except Exception as inst:
             print(inst)
             tk_image = None

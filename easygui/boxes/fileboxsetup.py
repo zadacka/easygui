@@ -10,7 +10,6 @@ Version |release|
 import os
 
 import easygui.boxes
-from easygui.boxes import utils as ut
 
 try:
     import tkinter as tk  # python 3
