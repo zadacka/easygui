@@ -2,7 +2,7 @@ import unittest
 
 from mock import patch, Mock
 
-from easygui import choicebox, multchoicebox
+from boxes.choice_box import choicebox, multchoicebox
 
 MODBASE = 'easygui.boxes.choice_box'
 
