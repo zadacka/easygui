@@ -87,7 +87,7 @@ class TestTextBoxIntegration(unittest.TestCase):
         tb = textbox(*TEST_ARGS, run=False)
 
         def simulate_user_x_press(tb_instance):
-            tb_instance.x_pressed('ignored button handler arg')
+            tb_instance._x_pressed('ignored button handler arg')
 
         tb.box_root.after(WAIT_0_MILLISECONDS, simulate_user_x_press, tb)
         actual = tb.run()
