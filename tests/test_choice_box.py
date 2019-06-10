@@ -4,7 +4,7 @@ from mock import patch, Mock
 
 from boxes.choice_box import choicebox, multchoicebox
 
-MODBASE = 'easygui.boxes.choice_box'
+MODBASE = 'boxes.choice_box'
 
 TEST_MESSAGE = 'example message'
 TEST_TITLE = 'example title'
