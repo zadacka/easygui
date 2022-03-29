@@ -12,6 +12,6 @@ services:
   - xvfb
 
 # command to run tests
-script: python -m unittest discover
+script: pytest
 
 install: pip install -r test-requirements.txt
