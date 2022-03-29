@@ -1,2 +1,2 @@
 pynput==1.7.3           # required for keypress simulation for Al's integration tests
-pytest==7.1.1
+pytest==4.6.11           # 4.6.x is the latest version that supports Python 2.7
