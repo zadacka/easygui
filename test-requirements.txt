@@ -1,2 +1,2 @@
 pynput==1.7.3           # required for keypress simulation for Al's integration tests
-pytest>=4.6.11;         # 4.6.x is the last version to support Python 2.x, 3.4
+pytest>=4.6.11;!=7.1.1  # 4.6.x is the last version to support Python 2.x, 3.4; 7.1.1 makes TravisCI blow up for Py3.7!
