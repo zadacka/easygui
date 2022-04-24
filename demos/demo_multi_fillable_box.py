@@ -44,12 +44,12 @@ class Demo2():
 
     def check_for_blank_fields(self, box):
         # make sure that none of the fields was left blank
-        cancelled = box.return_value is None
+        cancelled = box.values is None
         errors = []
         if cancelled:
             pass
         else:  # check for errors
-            for name, value in zip(box.fields, box.return_value):
+            for name, value in zip(box.fields, box.values):
                 if value.strip() == "":
                     errors.append('"{}" is a required field.'.format(name))
 

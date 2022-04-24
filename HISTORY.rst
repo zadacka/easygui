@@ -1,3 +1,4 @@
+
 """
 
 .. moduleauthor:: easygui developers and Stephen Raymond Ferg
@@ -24,7 +25,6 @@ def abouteasygui():
 
 
 EASYGUI_ABOUT_INFORMATION = '''
-
 0.98.3
 ========================================================================
 Update collections.abc import location (old location was deprecated since version 3.3, removed in version 3.10)
@@ -259,8 +259,3 @@ BUG FIXES
 
  * Fixed a bug that was preventing Linux users from copying text out of
    a textbox and a codebox.  This was not a problem for Windows users.
-
-'''
-
-if __name__ == '__main__':
-    abouteasygui()

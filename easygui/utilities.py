@@ -3,116 +3,7 @@ import re
 import tkinter as tk
 
 from easygui.global_state import PROP_FONT_LINE_LENGTH, FIXW_FONT_LINE_LENGTH, DEFAULT_PADDING, REGULAR_FONT_WIDTH, \
-    FIXED_FONT_WIDTH, GLOBAL_WINDOW_POSITION
-
-
-class AbstractBox(object):
-    """
-    The following boxes have commonalities, so we can abstract some code here to a parent class
-        ButtonBox:          def __init__(self, msg, title, choices, images, default_choice, cancel_choice, callback):
-        ChoiceBox:          def __init__(self, msg, title, choices, preselect, multiple_select, callback):
-        FillableBox:        def __init__(self, msg, title, default, mask=None, image=None, root=None):
-        MultiFillableBox:   def __init__(self, msg, title, fields=None, values=None, mask_last=False, callback=None):
-        TextBox             def __init__(self, msg, title, text, codebox, callback):
-    """
-
-    def __init__(self, title, callback) -> None:
-        super().__init__()
-        self._user_specified_callback = callback
-        self.box_root = self._configure_box_root(title)
-        self.return_value = None
-        self.msg_widget = NotImplemented
-        self.cancel_value = None
-
-    def _set_return_value(self):
-        raise NotImplemented
-
-    def _configure_box_root(self, title):
-        box_root = tk.Tk()
-        box_root.title(title)
-        box_root.iconname('Dialog')
-        box_root.geometry(GLOBAL_WINDOW_POSITION)
-        box_root.bind("<Escape>", self.cancel_button_pressed)
-        box_root.protocol('WM_DELETE_WINDOW', self.cancel_button_pressed)
-        return box_root
-
-    def configure_message_widget(self, monospace):
-        """
-        # TODO: fix bug that the line count does not include wrapped lines
-        # height = message.tk.call((self.mess\age._w, "count", "-update", "-displaylines", "1.0", "end"))
-        :param bool monospace: whether the message shold be monospace or proportional text
-        :return:
-        """
-        padding, width_in_chars = get_width_and_padding(monospace=monospace)
-
-        message_frame = tk.Frame(self.box_root, padx=padding)
-        message_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-
-        message_text = tk.Text(
-            master=message_frame,
-            width=width_in_chars,
-            padx=padding,
-            pady=padding,
-            wrap=tk.WORD,
-            # wrap=tk.NONE if monospace else tk.WORD
-        )
-        return message_text
-
-    @property
-    def msg(self):
-        return self.msg_widget.get(1.0, tk.END)
-
-    @msg.setter
-    def msg(self, message):
-        self.msg_widget.configure(state=tk.NORMAL)
-        self.msg_widget.delete(1.0, tk.END)
-        self.msg_widget.insert(tk.END, message)
-        self.msg_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        line, char = self.msg_widget.index(tk.END).split('.')
-        self.msg_widget.configure(height=int(line))
-        self.msg_widget.configure(state=tk.DISABLED)
-
-    def set_buttons(self):
-        buttons_frame = tk.Frame(self.box_root)
-        buttons_frame.pack(side=tk.TOP)
-
-        cancel_button = tk.Button(buttons_frame, takefocus=tk.YES, text="Cancel", height=1, width=6)
-        cancel_button.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m', ipady="1m", ipadx="2m")
-        cancel_button.bind("<Escape>", self.cancel_button_pressed)
-        bind_to_mouse(cancel_button, self.cancel_button_pressed)
-
-        ok_button = tk.Button(buttons_frame, takefocus=tk.YES, text="OK", height=1, width=6)
-        ok_button.pack(expand=tk.NO, side=tk.LEFT, padx='2m', pady='1m', ipady="1m", ipadx="2m")
-        ok_button.bind("<Return>", self.ok_button_pressed)
-        bind_to_mouse(ok_button, self.ok_button_pressed)
-
-    def cancel_button_pressed(self, *args):
-        """
-        Set the return value to None so that and quit the mainloop()
-        Care: may be called:
-         * with zero args when handling a window close action
-         * with one arg when handling an Escape button precessed binding
-        :param args: zero or more args
-        :return: None
-        """
-        self.return_value = self.cancel_value
-        self.box_root.quit()
-
-    def ok_button_pressed(self, _):
-        self._set_return_value()
-        if self._user_specified_callback:
-            # If a callback was set, call main process
-            self._user_specified_callback(self)
-        else:
-            self.stop()
-
-    def run(self):
-        self.box_root.mainloop()
-        self.box_root.destroy()
-        return self.return_value
-
-    def stop(self):
-        self.box_root.quit()
+    FIXED_FONT_WIDTH, boxRoot
 
 
 def parse_hotkey(text):
@@ -210,6 +101,11 @@ def load_tk_image(filename, tk_master=None):
     return tk_image
 
 
+def get_num_lines(message_area):
+    num_lines, _ = message_area.index(tk.END).split('.')
+    return num_lines
+
+
 def get_width_and_padding(monospace):
     if monospace:
         padding = DEFAULT_PADDING * FIXED_FONT_WIDTH
@@ -218,6 +114,22 @@ def get_width_and_padding(monospace):
         padding = DEFAULT_PADDING * REGULAR_FONT_WIDTH
         width_in_chars = PROP_FONT_LINE_LENGTH
     return padding, width_in_chars
+
+
+def bindArrows(widget):
+    widget.bind("<Down>", tabRight)
+    widget.bind("<Up>", tabLeft)
+
+    widget.bind("<Right>", tabRight)
+    widget.bind("<Left>", tabLeft)
+
+
+def tabRight(event):
+    boxRoot.event_generate("<Tab>")
+
+
+def tabLeft(event):
+    boxRoot.event_generate("<Shift-Tab>")
 
 
 class MouseClickHandler:
@@ -240,26 +152,3 @@ class MouseClickHandler:
     def release(self, event):
         if self._mouse_is_on_button:
             return self._callback(event)
-
-
-def bind_to_mouse(button, callback):
-    handler = MouseClickHandler(callback=callback)
-    button.bind("<Enter>", handler.enter)
-    button.bind("<Leave>", handler.leave)
-    button.bind("<ButtonRelease-1>", handler.release)
-
-
-def convert_to_a_list_of_lists(filenames):
-    """ historically the 'filenames' argument could be
-    ... a list of lists OR a list OR a string!
-    Converting all flavours of input to list-of-lists simplifies subsequent handling
-    """
-    if filenames is None:
-        return [[], ]
-    elif type(filenames) is str:
-        return [[filenames, ], ]
-    elif type(filenames[0]) is str:
-        return [filenames, ]
-    elif type(filenames[0][0]) is str:
-        return filenames
-    raise ValueError("Incorrect images argument.")

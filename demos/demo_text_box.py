@@ -46,7 +46,8 @@ class Demo2(object):
 
         self.finished = False
 
-        textbox(gnexp + msg, title, text_snippet, callback=self.check_answer, run=True)
+        textbox(gnexp + msg, title, text_snippet, False,
+                callback=self.check_answer, run=True)
 
     def check_answer(self, box):
         """ Callback from TextBox
@@ -91,7 +92,8 @@ class Demo3(object):
 
         text_snippet = "Hello"  # This text wont show
 
-        box = textbox(msg, title, text_snippet, callback=self.check_answer, run=False)
+        box = textbox(
+            msg, title, text_snippet, False, callback=self.check_answer, run=False)
 
         box.text = (
             "It was the west of times, and it was the worst of times. "
