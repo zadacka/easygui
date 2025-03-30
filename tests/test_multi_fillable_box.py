@@ -1,5 +1,3 @@
-import easygui
-import easygui.global_state
 from easygui import multenterbox
 from tests import WAIT_0_MILLISECONDS
 

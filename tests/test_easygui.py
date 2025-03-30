@@ -52,8 +52,9 @@ def test_spacebar_clicks_choice():
         (('Message', 'Title'), {}, 'OK'),  # custom message and title
         ((), dict(ok_button='Button'), 'Button'),  # custom button text
         (('Message', 'Title'), dict(ok_button='Button'), 'Button'),  # combo of all three
-        ((), dict(image=os.path.join(FOLDER_OF_THIS_FILE, '../demos/pi.jpg')), 'OK'),  # test jpg
-        ((), dict(image=os.path.join(FOLDER_OF_THIS_FILE, '../demos/result.png')), 'OK'),  # test png
+        ((), dict(image=os.path.join(FOLDER_OF_THIS_FILE, '../demos/images/python_and_check_logo.gif')), 'OK'),  # gif
+        ((), dict(image=os.path.join(FOLDER_OF_THIS_FILE, '../demos/images/python_and_check_logo.png')), 'OK'),  # png
+        # ((), dict(image=os.path.join(FOLDER_OF_THIS_FILE, '../demos/images/python_and_check_logo.jpg')), 'OK'),  # jpg ... requires PIL library
     )
 
     for args, kwargs, expected in parameters:

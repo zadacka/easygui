@@ -10,7 +10,7 @@ def buttonbox(msg="buttonbox options", title=" ", choices=("Button[1]", "Button[
     The buttons are defined by the members of the choices argument.
     :param str msg: the msg to be displayed
     :param str title: the window title
-    :param list choices: a list or tuple of the choices to be displayed
+    :param tuple choices: a list or tuple of the choices to be displayed
     :param str image: (Only here for backward compatibility)
     :param str images: Filename of image or iterable or iteratable of iterable to display
     :param str default_choice: The choice you want highlighted when the gui appears

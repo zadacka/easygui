@@ -280,8 +280,8 @@ def suppress_module_docstring(app, what, name, obj, options, lines):
 
 def functions_to_headers(app, what, name, obj, options, lines):
   if what == 'function':
-    lines.insert(0,'.. py:function:: freddy')  # Not needed
-    lines.insert(1,'')
+    lines.insert_at(0, '.. py:function:: freddy')  # Not needed
+    lines.insert_at(1, '')
     print(lines[0])
     print(obj)
     print(options)

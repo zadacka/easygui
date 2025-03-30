@@ -86,7 +86,7 @@ def load_tk_image(filename, tk_master=None):
         from PIL import ImageTk as PILImageTk
         pil_image = PILImage.open(filename)
         tk_image = PILImageTk.PhotoImage(pil_image, master=tk_master)
-    except:
+    except ModuleNotFoundError:
         try:
             # Fallback if PIL isn't available
             tk_image = tk.PhotoImage(file=filename, master=tk_master)
